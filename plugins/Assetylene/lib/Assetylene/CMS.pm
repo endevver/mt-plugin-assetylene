@@ -6,6 +6,7 @@
 package Assetylene::CMS;
 
 use strict;
+use Assetylene::L10N;
 
 sub asset_options_image {
     my ($cb, $app, $param, $tmpl) = @_;
@@ -39,7 +40,7 @@ sub asset_options_image {
     $opt->innerHTML(<<HTML);
     <input type="checkbox" id="insert_caption" name="insert_caption"
         value="1" />
-    <label for="insert_caption">Insert a caption?</label>
+    <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Insert a caption?'></__trans_section></label>
     <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols=""
         onfocus="getByID('insert_caption').checked=true; return false;"
         class="full-width">$caption_safe</textarea></div>
