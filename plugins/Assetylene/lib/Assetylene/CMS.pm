@@ -41,9 +41,8 @@ sub asset_options_image {
     <input type="checkbox" id="insert_caption" name="insert_caption"
         value="1" />
     <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Insert a caption?'></__trans_section></label>
-    <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols=""
-        onfocus="getByID('insert_caption').checked=true; return false;"
-        class="full-width">$caption_safe</textarea></div>
+    <input type="text" name="caption" onfocus="getByID('insert_caption').checked=true; return false;"
+        value="$caption_safe" style="width:16em;" />
 HTML
     # Insert new field above the 'image_alignment' field:
     $tmpl->insertBefore($opt, $el);
