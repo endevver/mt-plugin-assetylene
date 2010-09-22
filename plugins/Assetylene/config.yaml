@@ -10,8 +10,16 @@ applications:
         callbacks:
             template_param.asset_options_image: $Assetylene::Assetylene::CMS::asset_options_image
             template_param.asset_insert: $Assetylene::Assetylene::CMS::asset_insert
-
 templets:
+    Assetylene:
+        base_path: template
+        label: AssetInsertion for Assetylene
+        order: 99
+        templates:
+          module:
+            asset_insertion:
+              label: Asset Insertion
+template_sets:
     Assetylene:
         base_path: template
         label: AssetInsertion for Assetylene

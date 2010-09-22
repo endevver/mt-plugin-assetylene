@@ -8,7 +8,11 @@ use vars qw( %Lexicon );
 
 %Lexicon = (
 	'Provides a new "Caption" field when inserting an asset into a post, and the ability to customize the HTML markup produced for publishing MT assets.'
-	   => 'アイテムのマークアップをカスタマイズします。',
+	   => 'キャプション・フィールドの追加と、アイテムのマークアップをカスタマイズする機能を提供します。',
+	'Sample "Asset Insertion" template module.'
+	   => '"Asset Insertion"テンプレートモジュールのサンプルです。',
+	'This module used by Assetylene plugin.'
+	   => 'このモジュールは Assetylene プラグインにより使用されます。',
 	'Insert a caption?' => 'キャプションを挿入',
 	'Asset Insertion' => 'アイテムを挿入する',
 );
