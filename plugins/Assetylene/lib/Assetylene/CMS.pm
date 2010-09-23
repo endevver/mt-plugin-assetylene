@@ -45,7 +45,7 @@ sub asset_options_image {
     use MT::Blog;
     my $blog = MT::Blog->load($blog_id) or die;
     my $themeid = $blog->theme_id;
-#    if ($themeid ne 'mtVicunaSimple') {
+    if ($themeid ne 'mtVicunaSimple') {
 
         my $insert_options = '';
         my $lb_select1 = $plugin->get_config_value('lb_select1',$scope);
@@ -95,7 +95,7 @@ sub asset_options_image {
         </div>
 HTML
 
-#    }
+    }
 
     # Insert new field above the 'image_alignment' field:
     $tmpl->insertBefore($opt, $el);
@@ -111,14 +111,13 @@ sub asset_insert {
     use MT::Blog;
     my $blog = MT::Blog->load($blog_id) or die;
     my $themeid = $blog->theme_id;
-#    if ($themeid ne 'mtVicunaSimple') {
-    doLog('$themeid:'.$themeid);
+    my $upload_html;
 
+    if ($themeid ne 'mtVicunaSimple') {
         my $plugin = MT->component("Assetylene");
         my $scope = "blog:".$blog_id;
         my $cleanup_insert = $plugin->get_config_value('cleanup_insert',$scope);
-        doLog('$cleanup_insert:'.$cleanup_insert);
-        my $upload_html = $param->{ upload_html };
+        $upload_html = $param->{ upload_html };
         if ($cleanup_insert) {
             my $rightalign_class = $plugin->get_config_value('rightalign_class',$scope);
             my $centeralign_class = $plugin->get_config_value('centeralign_class',$scope);
@@ -173,8 +172,7 @@ sub asset_insert {
                 $upload_html = $wrap.$upload_html.'</p>';
             }
         }
-
-#    }
+    }
 
     my $blog = $app->blog;
 
