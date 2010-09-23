@@ -1,10 +1,49 @@
 name: Assetylene
 description: <__trans phrase='Provides a new "Caption" field when inserting an asset into a post, and the ability to customize the HTML markup produced for publishing MT assets.'>
-version: 1.02
+author_name: oscar
+author_link: http://www.zelazny.mydns.jp/
+plugin_link: http://github.com/naoaki011/mt-plugin-assetylene/
+doc_link: http://code.zelazny.mydns.jp/trac/myproject/wiki/MtPluginsAssetylene
 l10n_class: Assetylene::L10N
-author_name: Six Apart Ltd.
-author_link: http://www.sixapart.com/
-
+version: 1.10
+blog_config_template: tmpl/blog_config.tmpl
+settings:
+  cleanup_insert:
+    default: 1
+    scope: blog
+  rightalign_class:
+    default: img_R
+    scope: blog
+  centeralign_class:
+    default: ''
+    scope: blog
+  leftalign_class:
+    default: img_L
+    scope: blog
+  lb_select1:
+    default: 1
+    scope: blog
+  lightbox_selector1:
+    default: 'rel="lightbox"'
+    scope: blog
+  lb_select2:
+    default: 0
+    scope: blog
+  lightbox_selector2:
+    default: 'class="highslide"'
+    scope: blog
+  lb_select3:
+    default: 0
+    scope: blog
+  lightbox_selector3:
+    default: ''
+    scope: blog
+  lb_select4:
+    default: 0
+    scope: blog
+  lightbox_selector4:
+    default: ''
+    scope: blog
 applications:
     cms:
         callbacks:
@@ -23,6 +62,7 @@ template_sets:
     Assetylene:
         base_path: template
         label: AssetInsertion for Assetylene
+        description: <__trans phrase='Sample "Asset Insertion" module for Assetylene. This is a templete module. Not a Template Set.'>
         order: 99
         templates:
           module:
