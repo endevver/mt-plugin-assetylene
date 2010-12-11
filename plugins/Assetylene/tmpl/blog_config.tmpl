@@ -1,0 +1,74 @@
+<mtapp:setting
+  id='insertion_pattern'
+  label='<__trans phrase="Insertion Pattern">'
+  hint='<__trans phrase='Hint'>'
+  >
+    <div style="float:left;width:6em;"><__trans phrase="Name">1</div>
+    <input type="text" name="pattern1" name="pattern1" value="<mt:var name="pattern1" escape="html">" /><br />
+    <div style="float:left;width:6em;"><__trans phrase="Name">2</div>
+    <input type="text" name="pattern2" name="pattern2" value="<mt:var name="pattern2" escape="html">" /><br />
+    <div style="float:left;width:6em;"><__trans phrase="Name">3</div>
+    <input type="text" name="pattern3" name="pattern3" value="<mt:var name="pattern3" escape="html">" /><br />
+    <div style="float:left;width:6em;"><__trans phrase="Name">4</div>
+    <input type="text" name="pattern4" name="pattern4" value="<mt:var name="pattern4" escape="html">" /><br />
+    <div style="float:left;width:6em;"><__trans phrase="Name">5</div>
+    <input type="text" name="pattern5" name="pattern5" value="<mt:var name="pattern5" escape="html">" /><br />
+</mtapp:setting>
+
+<mtapp:setting
+  id="cleanup_insert"
+  label="<__trans phrase="CleanUp Asset Insert">"
+  hint="<__trans phrase="Hint">">
+    <select name="cleanup_insert"
+    >
+      <option<mt:unless name="cleanup_insert"> selected="selected"</mt:unless> value="0"><__trans phrase="No CleanUp"></option>
+      <option<mt:if name="cleanup_insert" eq="1"> selected="selected"</mt:if> value="1"><__trans phrase="Add Class for Wrap Paragraph tag"></option>
+      <option<mt:if name="cleanup_insert" eq="2"> selected="selected"</mt:if> value="2"><__trans phrase="Add Class for Image tag"></option>
+    </select>
+</mtapp:setting>
+<mtapp:setting
+  id='alignment_class'
+  label='<__trans phrase='Alignment Class'>'
+  hint='<__trans phrase='Hint'>'
+  >
+    <div style="float:left;width:6em;"><__trans phrase='RightAlign'></div>
+    <input type="text" name="rightalign_class" name="rightalign_class" value="<mt:var name="rightalign_class">" /><br/>
+    <div style="float:left;width:6em;"><__trans phrase='CenterALign'></div>
+    <input type="text" name="centeralign_class" name="centeralign_class" value="<mt:var name="centeralign_class">" /><br/>
+    <div style="float:left;width:6em;"><__trans phrase='LeftAlign'></div>
+    <input type="text" name="leftalign_class" name="leftalign_class" value="<mt:var name="leftalign_class">" />
+</mtapp:setting>
+
+<mtapp:setting
+  id='lightbox_selector'
+  label='<__trans phrase='Lightbox Selector'>'
+  hint='<__trans phrase='Hint'>'
+  >
+    <label for="lb_select1"><__trans phrase='Use'></label>
+    (&nbsp;<input type="radio" name="lb_select1" id="lb_select1"<mt:if name="lb_select1" eq="1"> checked="checked"</mt:if> value="1" />
+    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
+    <input type="radio" name="lb_select1" id="lb_select1"<mt:unless name="lb_select1"> checked="checked"</mt:unless> value="0" />
+    <label><__trans phrase='No'></label>&nbsp;)
+    <input type="text" name="lightbox_selector1" name="lightbox_selector1" value="<mt:var name="lightbox_selector1" escape="html">" /><br/>
+
+    <label for="lb_select2"><__trans phrase='Use'></label>
+    (&nbsp;<input type="radio" name="lb_select2" id="lb_select2"<mt:if name="lb_select2" eq="1"> checked="checked"</mt:if> value="1" />
+    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
+    <input type="radio" name="lb_select2" id="lb_select2"<mt:unless name="lb_select2"> checked="checked"</mt:unless> value="0" />
+    <label><__trans phrase='No'></label>&nbsp;)
+    <input type="text" name="lightbox_selector2" name="lightbox_selector2" value="<mt:var name="lightbox_selector2" escape="html">" /><br/>
+
+    <label for="lb_select3"><__trans phrase='Use'></label>
+    (&nbsp;<input type="radio" name="lb_select3" id="lb_select3"<mt:if name="lb_select3" eq="1"> checked="checked"</mt:if> value="1" />
+    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
+    <input type="radio" name="lb_select3" id="lb_select3"<mt:unless name="lb_select3"> checked="checked"</mt:unless> value="0" />
+    <label><__trans phrase='No'></label>&nbsp;)
+    <input type="text" name="lightbox_selector3" name="lightbox_selector3" value="<mt:var name="lightbox_selector3" escape="html">" /><br/>
+
+    <label for="lb_select4"><__trans phrase='Use'></label>
+    (&nbsp;<input type="radio" name="lb_select4" id="lb_select4"<mt:if name="lb_select4" eq="1"> checked="checked"</mt:if> value="1" />
+    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
+    <input type="radio" name="lb_select4" id="lb_select4"<mt:unless name="lb_select4"> checked="checked"</mt:unless> value="0" />
+    <label><__trans phrase='No'></label>&nbsp;)
+    <input type="text" name="lightbox_selector4" name="lightbox_selector3" value="<mt:var name="lightbox_selector4" escape="html">" /><br/>
+</mtapp:setting>

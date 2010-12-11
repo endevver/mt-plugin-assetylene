@@ -52,9 +52,15 @@ used to generate the asset markup. And the current blog is also in context.
 
 An example template can be found in:
 
-    plugins/Assestylene/asset_insertion.mtml
+    plugins/Assestylene/template/asset_insertion.mtml
 
 You can use this as a basis for your own custom template.
+
+Or use tenplate install plugin such as Templets and  TemplateImport.
+
+    https://github.com/ogawa/mt-plugin-Templets
+
+    https://github.com/yuji/mt-plugin-TemplateImport
 
 Installation
 -------------

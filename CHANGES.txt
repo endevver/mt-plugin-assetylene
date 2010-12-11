@@ -1,3 +1,11 @@
+# Version 1.11 - Dec 11, 2010 (naoaki011)
+
+    * Support multi output results select in asset insertion
+
+# Version 1.10 - Sep 22, 2010 (naoaki011)
+
+    * Add support for Lightbox effect Handling
+
 # Version 1.02 - May 24, 2009 (byrnereese)
 
     * Improved some regexes so they are less greedy
