@@ -29,6 +29,8 @@ use vars qw( %Lexicon );
 	'CenterALign' => '中央揃え',
 	'LeftAlign' => '左揃え',
 	'Use' => '使用する',
+	'Remove Blank' => '空白行を削除',
+	'Pass' => '行わない',
 	'Insertion Pattern' => '挿入パターン',
 );
 
