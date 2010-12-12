@@ -203,11 +203,6 @@ sub asset_insert {
                     }
                 }
             }
-            my $insert_class = $app->param('insert_class');
-            if ( $app->param('insert_lightbox') ) {
-                $insert_class = '<a '.$insert_class;
-                $upload_html =~ s/<a/$insert_class/g;
-            }
             if ($cleanup_insert == '2') {
                 $upload_html =~ s/ class=\"mt-image-none\"//i;
                 $rightalign_class = ' class="'.$rightalign_class.'"';
@@ -227,6 +222,11 @@ sub asset_insert {
             if ($wrap) {
                 $upload_html = $wrap.$upload_html.'</p>';
             }
+        }
+        my $insert_class = $app->param('insert_class');
+        if ( $app->param('insert_lightbox') ) {
+            $insert_class = '<a '.$insert_class;
+            $upload_html =~ s/<a/$insert_class/g;
         }
     }
 
@@ -290,6 +290,7 @@ sub asset_insert {
 
     # Process the user-defined template:
     my $new_html = $insert_tmpl->output;
+    $new_html =~ s/\s*\n+/\n/g;
 
     if (defined($new_html)) {
         # Replace the MT generated asset markup with the user-defined
