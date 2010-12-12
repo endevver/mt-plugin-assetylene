@@ -10,6 +10,9 @@ settings:
   cleanup_insert:
     default: 1
     scope: blog
+  remove_blank:
+    default: 1
+    scope: blog
   rightalign_class:
     default: img_R
     scope: blog

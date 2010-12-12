@@ -26,6 +26,17 @@
       <option<mt:if name="cleanup_insert" eq="2"> selected="selected"</mt:if> value="2"><__trans phrase="Add Class for Image tag"></option>
     </select>
 </mtapp:setting>
+
+<mtapp:setting
+  id="remove_blank"
+  label="<__trans phrase="Remove Blank">"
+  hint="<__trans phrase="Hint">">
+    <label for="remove_blank"><__trans phrase='Remove'></label>
+    <input type="radio" name="remove_blank"<mt:if name="remove_blank" eq="1"> checked="checked"</mt:if> value="1" />
+    <label for="remove_blank"><__trans phrase='Pass'></label>
+    <input type="radio" name="remove_blank"<mt:unless name="remove_blank"> checked="checked"</mt:unless> value="0" />
+</mtapp:setting>
+
 <mtapp:setting
   id='alignment_class'
   label='<__trans phrase='Alignment Class'>'

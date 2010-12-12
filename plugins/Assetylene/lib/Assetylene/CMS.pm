@@ -170,9 +170,9 @@ sub asset_insert {
     use MT::Blog;
     my $blog = MT::Blog->load($blog_id) or die;
     my $themeid = $blog->theme_id;
+    my $plugin = MT->component("Assetylene");
+    my $scope = "blog:".$blog_id;
     if ($themeid ne 'mtVicunaSimple') {
-        my $plugin = MT->component("Assetylene");
-        my $scope = "blog:".$blog_id;
         my $cleanup_insert = $plugin->get_config_value('cleanup_insert',$scope);
         if ($cleanup_insert) {
             my $rightalign_class = $plugin->get_config_value('rightalign_class',$scope);
@@ -290,7 +290,11 @@ sub asset_insert {
 
     # Process the user-defined template:
     my $new_html = $insert_tmpl->output;
-    $new_html =~ s/\s*\n+/\n/g;
+
+    my $remove_blank = $plugin->get_config_value('remove_blank',$scope);
+    if ($remove_blank) {
+        $new_html =~ s/\s*\n+/\n/g;
+    }
 
     if (defined($new_html)) {
         # Replace the MT generated asset markup with the user-defined
