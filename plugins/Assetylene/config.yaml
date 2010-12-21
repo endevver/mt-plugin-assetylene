@@ -56,7 +56,7 @@ settings:
     default: Max link image width 800px
     scope: blog
   pattern4:
-    default: ''
+    default: Max link image width 800px and Thumbnail width 450px
     scope: blog
   pattern5:
     default: ''

@@ -2,13 +2,14 @@
 <mt:Ignore><__trans_section component="Assetylene"><__trans phrase="Sample 'Asset Insertion' template module."></__trans_section></mt:Ignore>
 <mt:Ignore><__trans_section component="Assetylene"><__trans phrase="This module used by Assetylene plugin."></__trans_section></mt:Ignore>
 <mt:if name="pattern" eq="1">
-<mt:var name="upload_html">
+<$mt:var name="upload_html"$>
 <mt:elseif name="pattern" eq="2">
+
 <mt:SetVarBlock name="alt_text">
 <mt:if name="caption">
-<$mt:var name="caption" remove_html="1" strip_linefeeds="1" trim="1">
+<$mt:var name="caption" remove_html="1" strip_linefeeds="1" trim="1"$>
 <mt:else>
-<$mt:AssetDescription remove_html="1" strip_linefeeds="1" trim="1">
+<$mt:AssetDescription remove_html="1" strip_linefeeds="1" trim="1"$>
 </mt:if>
 </mt:SetVarBlock>
 
@@ -30,9 +31,9 @@
 
 <mt:SetVarBlock name="alt_text">
 <mt:if name="caption">
-<$mt:var name="caption" remove_html="1" strip_linefeeds="1" trim="1">
+<$mt:var name="caption" remove_html="1" strip_linefeeds="1" trim="1"$>
 <mt:else>
-<$mt:AssetDescription remove_html="1" strip_linefeeds="1" trim="1">
+<$mt:AssetDescription remove_html="1" strip_linefeeds="1" trim="1"$>
 </mt:if>
 </mt:SetVarBlock>
 
@@ -46,11 +47,38 @@
 <mt:if name="thumb">
 <mt:AssetProperty property="image_width" setvar="asset_width" />
 <mt:AssetProperty property="image_height" setvar="asset_height" />
-<a href="<mt:if name="asset_width" gt="$max_width">
-<$mt:AssetThumbnailURL width="$max_width"$>
+<a href="<mt:if name="asset_width" gt="$max_width"><$mt:AssetThumbnailURL width="$max_width"$><mt:else><$mt:AssetURL$></mt:if>">
+<$mt:var name="image_html"$>
+</a>
 <mt:else>
-<$mt:AssetURL$>
-</mt:if>">
+<$mt:var name="image_html"$>
+</mt:if>
+
+<mt:elseif name="pattern" eq="4">
+<mt:SetVar name="max_width" value="800" />
+<mt:SetVar name="max_thumbnail_width" value="450" />
+
+<mt:SetVarBlock name="alt_text">
+<mt:if name="caption">
+<$mt:var name="caption" remove_html="1" strip_linefeeds="1" trim="1"$>
+<mt:else>
+<$mt:AssetDescription remove_html="1" strip_linefeeds="1" trim="1"$>
+</mt:if>
+</mt:SetVarBlock>
+
+<mt:SetVarBlock name="image_html">
+<mt:Var name="img_height" op="*" value="$max_thumbnail_width" setvar="mulvalue" />
+<img
+ src="<mt:if name="img_width" gt="$max_thumbnail_width"><$mt:AssetThumbnailURL width="$max_thumbnail_width"$><mt:else><$mt:Var name="img_src"$></mt:if>"
+ width="<mt:if name="img_width" gt="$max_thumbnail_width"><$mt:Var name="max_thumbnail_width"$><mt:else><$mt:Var name="img_width"$></mt:if>"
+ height="<mt:if name="img_width" gt="$max_thumbnail_width"><$mt:Var name="mulvalue" op="/" value="$img_width" regex_replace="/\.\d+/",""$><mt:else><$mt:Var name="img_height"$></mt:if>"
+ alt="<mt:if name="alt_text"><$mt:Var name="alt_text" escape="html"$><mt:else><mt:AssetLabel remove_html="1" strip_linefeeds="1" trim="1" escape="html"></mt:if>" />
+</mt:SetVarBlock>
+
+<mt:if name="thumb">
+<mt:AssetProperty property="image_width" setvar="asset_width" />
+<mt:AssetProperty property="image_height" setvar="asset_height" />
+<a href="<mt:if name="asset_width" gt="$max_width"><$mt:AssetThumbnailURL width="$max_width"$><mt:else><$mt:AssetURL$></mt:if>">
 <$mt:var name="image_html"$>
 </a>
 <mt:else>
