@@ -73,19 +73,19 @@ HTML
     }
     my $pattern_name2 = MT::Util::encode_html($plugin->get_config_value('pattern2',$scope),1);
     if ($pattern_name2) {
-        $insert_options .= '<option value="2">' . $pattern_name1 . '</option>' . "\n";
+        $insert_options .= '<option value="2">' . $pattern_name2 . '</option>' . "\n";
     }
     my $pattern_name3 = MT::Util::encode_html($plugin->get_config_value('pattern3',$scope),1);
     if ($pattern_name3) {
-        $insert_options .= '<option value="3">' . $pattern_name1 . '</option>' . "\n";
+        $insert_options .= '<option value="3">' . $pattern_name3 . '</option>' . "\n";
     }
     my $pattern_name4 = MT::Util::encode_html($plugin->get_config_value('pattern4',$scope),1);
     if ($pattern_name4) {
-        $insert_options .= '<option value="4">' . $pattern_name1 . '</option>' . "\n";
+        $insert_options .= '<option value="4">' . $pattern_name4 . '</option>' . "\n";
     }
     my $pattern_name5 = MT::Util::encode_html($plugin->get_config_value('pattern5',$scope),1);
     if ($pattern_name5) {
-        $insert_options .= '<option value="5">' . $pattern_name1 . '</option>' . "\n";
+        $insert_options .= '<option value="5">' . $pattern_name5 . '</option>' . "\n";
     }
 
     if ($insert_options) {

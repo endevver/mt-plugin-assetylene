@@ -1,9 +1,63 @@
-<mt:Ignore><__trans_section component="Assetylene"><__trans phrase="Sample "Asset Insertion" template module."></__trans_section></mt:Ignore>
+<mt:unless strip_linefeeds="1">
+<mt:Ignore><__trans_section component="Assetylene"><__trans phrase="Sample 'Asset Insertion' template module."></__trans_section></mt:Ignore>
 <mt:Ignore><__trans_section component="Assetylene"><__trans phrase="This module used by Assetylene plugin."></__trans_section></mt:Ignore>
-
+<mt:if name="pattern" eq="1">
+<mt:var name="upload_html">
+<mt:elseif name="pattern" eq="2">
+<mt:SetVarBlock name="alt_text">
 <mt:if name="caption">
-	<div style="text-align: <mt:var name="align">"><mt:var name="img_tag"><br />
-	<mt:var name="a_tag"><mt:var name="caption" escape="html"><mt:if name="a_tag"></a></mt:if></div>
+<$mt:var name="caption" remove_html="1" strip_linefeeds="1" trim="1">
 <mt:else>
-	<mt:var name="upload_html">
+<$mt:AssetDescription remove_html="1" strip_linefeeds="1" trim="1">
 </mt:if>
+</mt:SetVarBlock>
+
+<mt:SetVarBlock name="image_html">
+<img src="<$mt:Var name="img_src"$>"
+ width="<$mt:Var name="img_width"$>"
+ height="<$mt:Var name="img_height"$>"
+ alt="<mt:if name="alt_text"><$mt:Var name="alt_text" escape="html"$><mt:else><mt:AssetLabel remove_html="1" strip_linefeeds="1" trim="1" escape="html"></mt:if>" />
+</mt:SetVarBlock>
+
+<mt:if name="thumb">
+<a href="<$mt:AssetURL$>"><$mt:var name="image_html"$></a>
+<mt:else>
+<$mt:var name="image_html"$>
+</mt:if>
+
+<mt:elseif name="pattern" eq="3">
+<mt:SetVar name="max_width" value="800" />
+
+<mt:SetVarBlock name="alt_text">
+<mt:if name="caption">
+<$mt:var name="caption" remove_html="1" strip_linefeeds="1" trim="1">
+<mt:else>
+<$mt:AssetDescription remove_html="1" strip_linefeeds="1" trim="1">
+</mt:if>
+</mt:SetVarBlock>
+
+<mt:SetVarBlock name="image_html">
+<img src="<$mt:Var name="img_src"$>"
+ width="<$mt:Var name="img_width"$>"
+ height="<$mt:Var name="img_height"$>"
+ alt="<mt:if name="alt_text"><$mt:Var name="alt_text" escape="html"$><mt:else><mt:AssetLabel remove_html="1" strip_linefeeds="1" trim="1" escape="html"></mt:if>" />
+</mt:SetVarBlock>
+
+<mt:if name="thumb">
+<mt:AssetProperty property="image_width" setvar="asset_width" />
+<mt:AssetProperty property="image_height" setvar="asset_height" />
+<a href="<mt:if name="asset_width" gt="$max_width">
+<$mt:AssetThumbnailURL width="$max_width"$>
+<mt:else>
+<$mt:AssetURL$>
+</mt:if>">
+<$mt:var name="image_html"$>
+</a>
+<mt:else>
+<$mt:var name="image_html"$>
+</mt:if>
+
+<mt:else>
+<mt:var name="upload_html">
+</mt:if>
+</mt:unless>

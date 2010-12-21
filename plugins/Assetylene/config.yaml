@@ -47,13 +47,13 @@ settings:
     default: ''
     scope: blog
   pattern1:
-    default: Insertion Pattern
+    default: Default
     scope: blog
   pattern2:
-    default: ''
+    default: Caption as alt text
     scope: blog
   pattern3:
-    default: ''
+    default: Max link image width 800px
     scope: blog
   pattern4:
     default: ''
