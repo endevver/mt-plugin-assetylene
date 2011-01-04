@@ -1,3 +1,7 @@
+# Version 1.12 - Jan 04, 2011 (naoaki011)
+
+    * Add size limit variables for image & thumbnail
+
 # Version 1.11 - Dec 11, 2010 (naoaki011)
 
     * Support multi output results select in asset insertion
