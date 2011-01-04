@@ -1,6 +1,6 @@
 name: Assetylene
 description: <__trans phrase='Provides a new "Caption" field when inserting an asset into a post, and the ability to customize the HTML markup produced for publishing MT assets.'>
-version: 1.11
+version: 1.12
 author_name: naoaki.onozaki
 author_link: http://www.zelazny.mydns.jp/
 plugin_link: http://github.com/naoaki011/mt-plugin-assetylene/
@@ -56,10 +56,34 @@ settings:
     default: Max link image width 800px
     scope: blog
   pattern4:
-    default: Max link image width 800px and Thumbnail width 450px
+    default: ''
     scope: blog
   pattern5:
     default: ''
+    scope: blog
+  limit_width:
+    default: 1
+    scope: blog
+  limit_height:
+    default: 0
+    scope: blog
+  max_width:
+    default: 1200
+    scope: blog
+  max_height:
+    default: 560
+    scope: blog
+  limit_thumbnail_width:
+    default: 1
+    scope: blog
+  limit_thumbnail_height:
+    default: 0
+    scope: blog
+  max_thumbnail_width:
+    default: 450
+    scope: blog
+  max_thumbnail_height:
+    default: 400
     scope: blog
 applications:
     cms:

@@ -143,9 +143,10 @@ HTML
         <div>
             <input type="checkbox" id="insert_lightbox" name="insert_lightbox"
                 onclick="if(this.checked){document.getElementById('create_thumbnail').checked=true;
-                document.getElementById('thumb_width').focus();
+                  document.getElementById('thumb_width').focus();
                 }else{
-                document.getElementById('create_thumbnail').checked=false;}"
+                  document.getElementById('create_thumbnail').checked=false;
+                }"
                 value="1"<mt:if name="make_thumb"> checked="checked" </mt:if> />
             <label for="insert_lightbox"><__trans_section component="Assetylene"><__trans phrase='Use Lightbox Effect'></__trans_section></label>
             <select id="insert_class" name="insert_class">
@@ -156,6 +157,18 @@ HTML
     }
     $tmpl->insertBefore($opt, $el);
 # < lightbox
+# limit_size >
+
+    my $limit_thumbnail_width = $plugin->get_config_value('limit_thumbnail_width',$scope);
+    my $max_thumbnail_width = $plugin->get_config_value('max_thumbnail_width',$scope);
+    my $limit_thumbnail_height = $plugin->get_config_value('limit_thumbnail_height',$scope);
+    my $max_thumbnail_height = $plugin->get_config_value('max_thumbnail_height',$scope);
+
+#    my $myelm = $tmpl->getElementById('create_thumbnail-field')
+#        or return;
+
+
+# < limit_size
 
     # Force the tokens of the template to be reprocessed now that
     # we've manipulated it:

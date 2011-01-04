@@ -32,6 +32,11 @@ use vars qw( %Lexicon );
 	'Remove Blank' => '空白行を削除',
 	'Pass' => '行わない',
 	'Insertion Pattern' => '挿入パターン',
+	'Limit Image Size' => '画像サイズの制限',
+	'Limit Thumbnail Width' => 'サムネイルの幅を制限',
+	'Limit Thumbnail Height' => 'サムネイルの高さを制限',
+	'Limit Image Width' => '画像の幅を制限',
+	'Limit Image Height' => '画像の高さを制限',
 );
 
 1;
