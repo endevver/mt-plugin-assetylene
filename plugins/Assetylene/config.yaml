@@ -47,7 +47,7 @@ settings:
     default: ''
     scope: blog
   pattern1:
-    default: Default
+    default: MT Default
     scope: blog
   pattern2:
     default: Caption as alt text

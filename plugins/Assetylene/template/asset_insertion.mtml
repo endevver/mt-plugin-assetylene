@@ -21,13 +21,17 @@
 </mt:SetVarBlock>
 
 <mt:if name="thumb">
-<a href="<$mt:AssetURL$>"><$mt:var name="image_html"$></a>
+<a href="<$mt:AssetURL$>"
+<mt:if name="a_style"> style="<$mt:var name="a_style"$>"</mt:if>
+<mt:if name="a_class"> class="<$mt:var name="a_class"$>"</mt:if>
+<mt:if name="a_title"> title="<$mt:var name="a_title"$>"</mt:if>
+<mt:if name="a_rel"> rel="<$mt:var name="a_rel"$>"</mt:if>
+><$mt:var name="image_html"$></a>
 <mt:else>
 <$mt:var name="image_html"$>
 </mt:if>
 
 <mt:elseif name="pattern" eq="3">
-<mt:SetVar name="max_width" value="800" />
 
 <mt:SetVarBlock name="alt_text">
 <mt:if name="caption">
@@ -39,9 +43,9 @@
 
 <mt:SetVarBlock name="image_html">
 <img src="<$mt:Var name="img_src"$>"
- width="<$mt:Var name="img_width"$>"
- height="<$mt:Var name="img_height"$>"
- alt="<mt:if name="alt_text"><$mt:Var name="alt_text" escape="html"$><mt:else><mt:AssetLabel remove_html="1" strip_linefeeds="1" trim="1" escape="html"></mt:if>" />
+width="<$mt:Var name="img_width"$>"
+height="<$mt:Var name="img_height"$>"
+alt="<mt:if name="alt_text"><$mt:Var name="alt_text" escape="html"$><mt:else><mt:AssetLabel remove_html="1" strip_linefeeds="1" trim="1" escape="html"></mt:if>" />
 </mt:SetVarBlock>
 
 <mt:if name="thumb">
@@ -55,8 +59,6 @@
 </mt:if>
 
 <mt:elseif name="pattern" eq="4">
-<mt:SetVar name="max_width" value="800" />
-<mt:SetVar name="max_thumbnail_width" value="450" />
 
 <mt:SetVarBlock name="alt_text">
 <mt:if name="caption">
@@ -78,7 +80,13 @@
 <mt:if name="thumb">
 <mt:AssetProperty property="image_width" setvar="asset_width" />
 <mt:AssetProperty property="image_height" setvar="asset_height" />
-<a href="<mt:if name="asset_width" gt="$max_width"><$mt:AssetThumbnailURL width="$max_width"$><mt:else><$mt:AssetURL$></mt:if>">
+<a href="<mt:if name="asset_width" gt="$max_width"><$mt:AssetThumbnailURL width="$max_width"$><mt:else><$mt:AssetURL$></mt:if>"
+<mt:if name="a_style"> style="<$mt:var name="a_style"$>"</mt:if>
+<mt:if name="a_class"> class="<$mt:var name="a_class"$>"</mt:if>
+<mt:if name="a_title"> title="<$mt:var name="a_title"$>"</mt:if>
+<mt:if name="a_rel"> rel="<$mt:var name="a_rel"$>"</mt:if>
+<mt:if name="a_onclick"> onclick="<$mt:var name="a_onclick"$>"</mt:if>
+>
 <$mt:var name="image_html"$>
 </a>
 <mt:else>
