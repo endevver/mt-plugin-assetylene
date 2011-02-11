@@ -53,37 +53,13 @@ settings:
     default: Caption as alt text
     scope: blog
   pattern3:
-    default: Max link image width 800px
+    default: ''
     scope: blog
   pattern4:
     default: ''
     scope: blog
   pattern5:
     default: ''
-    scope: blog
-  limit_width:
-    default: 1
-    scope: blog
-  limit_height:
-    default: 0
-    scope: blog
-  max_width:
-    default: 1200
-    scope: blog
-  max_height:
-    default: 560
-    scope: blog
-  limit_thumbnail_width:
-    default: 1
-    scope: blog
-  limit_thumbnail_height:
-    default: 0
-    scope: blog
-  max_thumbnail_width:
-    default: 450
-    scope: blog
-  max_thumbnail_height:
-    default: 400
     scope: blog
 applications:
     cms:

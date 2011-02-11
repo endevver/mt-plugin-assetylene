@@ -46,6 +46,11 @@ if no image is actually inserted and linked to instead).
 * a_tag: The "a" tag produced to link the image (if any).
 * a_href: The "href" attribute value of the "a" tag.
 * a_onclick: The "onclick" attribute value of the "a" tag.
+* a_style: The "style" attribute value of the "a" tag.
+* a_class: The "class" attribute value of the "a" tag.
+* a_title: The "title" attribute value of the "a" tag.
+* a_rel: The "rel" attribute value of the "a" tag.
+* pattern: Selected Number of Insertion Pattern Defined in Plugin Preference.
 
 Also, the asset itself is in context, so any of the MT Asset tags may be
 used to generate the asset markup. And the current blog is also in context.

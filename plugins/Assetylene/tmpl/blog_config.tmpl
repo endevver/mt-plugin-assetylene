@@ -16,40 +16,6 @@
 </mtapp:setting>
 
 <mtapp:setting
-  id='limit_image_size'
-  label='<__trans phrase='Limit Image Size'>'
-  hint='<__trans phrase='Hint'>'
-  >
-    <label for="limit_thumbnail_width"><__trans phrase='Limit Thumbnail Width'></label>
-    (&nbsp;<input type="radio" name="limit_thumbnail_width" id="limit_thumbnail_width"<mt:if name="limit_thumbnail_width" eq="1"> checked="checked"</mt:if> value="1" />
-    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
-    <input type="radio" name="limit_thumbnail_width" id="limit_thumbnail_width"<mt:unless name="limit_thumbnail_width"> checked="checked"</mt:unless> value="0" />
-    <label><__trans phrase='No'></label>&nbsp;)
-    <input type="text" name="max_thumbnail_width" name="max_thumbnail_width" value="<mt:var name="max_thumbnail_width" escape="html">" style="width:100px" />px<br/>
-
-    <label for="limit_thumbnail_height"><__trans phrase='Limit Thumbnail Height'></label>
-    (&nbsp;<input type="radio" name="limit_thumbnail_height" id="limit_thumbnail_height"<mt:if name="limit_thumbnail_height" eq="1"> checked="checked"</mt:if> value="1" />
-    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
-    <input type="radio" name="limit_thumbnail_height" id="limit_thumbnail_height"<mt:unless name="limit_thumbnail_height"> checked="checked"</mt:unless> value="0" />
-    <label><__trans phrase='No'></label>&nbsp;)
-    <input type="text" name="max_thumbnail_height" name="max_thumbnail_height" value="<mt:var name="max_thumbnail_height" escape="html">" style="width:100px" />px<br/>
-
-    <label for="limit_width"><__trans phrase='Limit Image Width'></label>
-    (&nbsp;<input type="radio" name="limit_width" id="limit_width"<mt:if name="limit_width" eq="1"> checked="checked"</mt:if> value="1" />
-    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
-    <input type="radio" name="limit_width" id="limit_width"<mt:unless name="limit_width"> checked="checked"</mt:unless> value="0" />
-    <label><__trans phrase='No'></label>&nbsp;)
-    <input type="text" name="max_width" name="max_width" value="<mt:var name="max_width" escape="html">" style="width:100px" />px<br/>
-
-    <label for="limit_height"><__trans phrase='Limit Image Height'></label>
-    (&nbsp;<input type="radio" name="limit_height" id="limit_height"<mt:if name="limit_height" eq="1"> checked="checked"</mt:if> value="1" />
-    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
-    <input type="radio" name="limit_height" id="limit_height"<mt:unless name="limit_height"> checked="checked"</mt:unless> value="0" />
-    <label><__trans phrase='No'></label>&nbsp;)
-    <input type="text" name="max_height" name="max_height" value="<mt:var name="max_height" escape="html">" style="width:100px" />px<br/>
-</mtapp:setting>
-
-<mtapp:setting
   id="cleanup_insert"
   label="<__trans phrase="CleanUp Asset Insert">"
   hint="<__trans phrase="Hint">">

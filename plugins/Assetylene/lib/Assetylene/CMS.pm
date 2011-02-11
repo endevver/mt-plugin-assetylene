@@ -149,23 +149,6 @@ HTML
     }
 
 #< Pattern
-# limit_size >
-
-    my $limit_thumbnail_width = $plugin->get_config_value('limit_thumbnail_width',$scope);
-    my $max_thumbnail_width = $plugin->get_config_value('max_thumbnail_width',$scope);
-    my $limit_thumbnail_height = $plugin->get_config_value('limit_thumbnail_height',$scope);
-    my $max_thumbnail_height = $plugin->get_config_value('max_thumbnail_height',$scope);
-
-    my $limit_width = $plugin->get_config_value('limit_width',$scope);
-    my $max_width = $plugin->get_config_value('max_width',$scope);
-    my $limit_height = $plugin->get_config_value('limit_height',$scope);
-    my $max_height = $plugin->get_config_value('max_height',$scope);
-
-#    my $myelm = $tmpl->getElementById('create_thumbnail-field')
-#        or return;
-
-
-# < limit_size
 # lightbox >
 
     $opt = $tmpl->createElement('app:setting', {
@@ -211,7 +194,6 @@ HTML
             <input type="checkbox" id="insert_lightbox" name="insert_lightbox"
                 onclick="if(this.checked){document.getElementById('create_thumbnail').checked=true;
                   document.getElementById('thumb_width').focus();
-                  document.getElementById('thumb_width').value=$max_thumbnail_width;
                 }else{
                   document.getElementById('create_thumbnail').checked=false;
                 }"
@@ -355,26 +337,6 @@ sub asset_insert {
     ($param->{img_alt}) = $img_tag =~ /\balt="([^\"]+)"/s;
 
     $param->{pattern} = $app->param('pattern');
-
-    my $limit_thumbnail_width = $plugin->get_config_value('limit_thumbnail_width',$scope);
-    my $max_thumbnail_width = $plugin->get_config_value('max_thumbnail_width',$scope);
-    my $limit_thumbnail_height = $plugin->get_config_value('limit_thumbnail_height',$scope);
-    my $max_thumbnail_height = $plugin->get_config_value('max_thumbnail_height',$scope);
-
-    $param->{limit_thumbnail_width} = 1 if $limit_thumbnail_width;
-    $param->{max_thumbnail_width} = $max_thumbnail_width;
-    $param->{limit_thumbnail_height} = 1 if $limit_thumbnail_height;
-    $param->{max_thumbnail_height} = $max_thumbnail_height;
-
-    my $limit_width = $plugin->get_config_value('limit_width',$scope);
-    my $max_width = $plugin->get_config_value('max_width',$scope);
-    my $limit_height = $plugin->get_config_value('limit_height',$scope);
-    my $max_height = $plugin->get_config_value('max_height',$scope);
-
-    $param->{limit_width} = 1 if $limit_width;
-    $param->{max_width} = $max_width;
-    $param->{limit_height} = 1 if $limit_height;
-    $param->{max_height} = $max_height;
 
     $insert_tmpl->param( $param );
 
