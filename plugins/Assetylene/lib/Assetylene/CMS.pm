@@ -39,65 +39,16 @@ sub asset_options_image {
     # description is being placed in an HTML textarea:
     my $caption_safe = MT::Util::encode_html( $asset->description );
 
-    my $blog_id = $app->param('blog_id');
-    my $plugin = MT->component("Assetylene");
-    my $scope = "blog:".$blog_id;
-
-    use MT::Blog;
-    my $blog = MT::Blog->load($blog_id) or die;
-    my $themeid = $blog->theme_id;
-    if ($themeid ne 'mtVicunaSimple') {
-
-        my $insert_options = '';
-        my $lb_select1 = $plugin->get_config_value('lb_select1',$scope);
-        my $lightbox_selector1 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector1',$scope),1);
-        if (($lb_select1) && ($lightbox_selector1)) {
-            $insert_options .= '<option value="' . $lightbox_selector1 . '">' . $lightbox_selector1 . '</option>' . "\n";
-        }
-        my $lb_select2 = $plugin->get_config_value('lb_select2',$scope);
-        my $lightbox_selector2 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector2',$scope),1);
-        if (($lb_select2) && ($lightbox_selector2)) {
-            $insert_options .= '<option value="' . $lightbox_selector2 . '">' . $lightbox_selector2 . '</option>' . "\n";
-        }
-        my $lb_select3 = $plugin->get_config_value('lb_select3',$scope);
-        my $lightbox_selector3 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector3',$scope),1);
-        if (($lb_select3) && ($lightbox_selector3)) {
-            $insert_options .= '<option value="' . $lightbox_selector3 . '">' . $lightbox_selector3 . '</option>' . "\n";
-        }
-        my $lb_select4 = $plugin->get_config_value('lb_select4',$scope);
-        my $lightbox_selector4 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector4',$scope),1);
-        if (($lb_select4) && ($lightbox_selector4)) {
-            $insert_options .= '<option value="' . $lightbox_selector4 . '">' . $lightbox_selector4 . '</option>' . "\n";
-        }
-        if ($insert_options eq '') {
-            $insert_options .= '<option value="rel=&quot;lightbox&quot;">rel=&quot;lightbox&quot;</option>' . "\n";
-        }
-
         # Contents of the app:setting tag:
         $opt->innerHTML(<<HTML);
         <div class="field">
             <input type="checkbox" id="insert_caption" name="insert_caption"
                 value="1" />
             <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Insert a caption?'></__trans_section></label>
-            <input type="text" name="caption" onfocus="getByID('insert_caption').checked=true; return false;"
-                value="$caption_safe" style="width:16em;" />
-        </div>
-        <div>
-            <input type="checkbox" id="insert_lightbox" name="insert_lightbox"
-                onclick="if(this.checked){document.getElementById('create_thumbnail').checked=true;
-                document.getElementById('thumb_width').focus();
-                }else{
-                document.getElementById('create_thumbnail').checked=false;}"
-                value="1"<mt:if name="make_thumb"> checked="checked" </mt:if> />
-            <label for="insert_lightbox"><__trans_section component="Assetylene"><__trans phrase='Use Lightbox Effect'></__trans_section></label>
-            <select id="insert_class" name="insert_class">
-                $insert_options
-            </select>
-        </div>
+    <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols=""
+        onfocus="getByID('insert_caption').checked=true; return false;"
+        class="full-width">$caption_safe</textarea></div>
 HTML
-
-    }
-
     # Insert new field above the 'image_alignment' field:
     $tmpl->insertBefore($opt, $el);
 
@@ -164,32 +115,34 @@ HTML
     my $themeid = $blog->theme_id;
     if ($themeid ne 'mtVicunaSimple') {
 
-        my $insert_options = '';
         my $lb_select1 = $plugin->get_config_value('lb_select1',$scope);
-        my $lightbox_selector1 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector1',$scope),1);
-        if (($lb_select1) && ($lightbox_selector1)) {
-            $insert_options .= '<option value="' . $lightbox_selector1 . '">' . $lightbox_selector1 . '</option>' . "\n";
-        }
         my $lb_select2 = $plugin->get_config_value('lb_select2',$scope);
-        my $lightbox_selector2 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector2',$scope),1);
-        if (($lb_select2) && ($lightbox_selector2)) {
-            $insert_options .= '<option value="' . $lightbox_selector2 . '">' . $lightbox_selector2 . '</option>' . "\n";
-        }
         my $lb_select3 = $plugin->get_config_value('lb_select3',$scope);
-        my $lightbox_selector3 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector3',$scope),1);
-        if (($lb_select3) && ($lightbox_selector3)) {
-            $insert_options .= '<option value="' . $lightbox_selector3 . '">' . $lightbox_selector3 . '</option>' . "\n";
-        }
         my $lb_select4 = $plugin->get_config_value('lb_select4',$scope);
-        my $lightbox_selector4 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector4',$scope),1);
-        if (($lb_select4) && ($lightbox_selector4)) {
-            $insert_options .= '<option value="' . $lightbox_selector4 . '">' . $lightbox_selector4 . '</option>' . "\n";
-        }
-        if ($insert_options eq '') {
-            $insert_options .= '<option value="rel=&quot;lightbox&quot;">rel=&quot;lightbox&quot;</option>' . "\n";
-        }
+        if (($lb_select1) ||($lb_select2) || ($lb_select3) || ($lb_select4)) {
 
-        $opt->innerHTML(<<HTML);
+            my $insert_options = '';
+            my $lightbox_selector1 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector1',$scope),1);
+            if (($lb_select1) && ($lightbox_selector1)) {
+                $insert_options .= '<option value="' . $lightbox_selector1 . '">' . $lightbox_selector1 . '</option>' . "\n";
+            }
+            my $lightbox_selector2 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector2',$scope),1);
+            if (($lb_select2) && ($lightbox_selector2)) {
+                $insert_options .= '<option value="' . $lightbox_selector2 . '">' . $lightbox_selector2 . '</option>' . "\n";
+            }
+            my $lightbox_selector3 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector3',$scope),1);
+            if (($lb_select3) && ($lightbox_selector3)) {
+                $insert_options .= '<option value="' . $lightbox_selector3 . '">' . $lightbox_selector3 . '</option>' . "\n";
+            }
+            my $lightbox_selector4 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector4',$scope),1);
+            if (($lb_select4) && ($lightbox_selector4)) {
+               $insert_options .= '<option value="' . $lightbox_selector4 . '">' . $lightbox_selector4 . '</option>' . "\n";
+            }
+            if ($insert_options eq '') {
+                $insert_options .= '<option value="rel=&quot;lightbox&quot;">rel=&quot;lightbox&quot;</option>' . "\n";
+            }
+
+            $opt->innerHTML(<<HTML);
         <div>
             <input type="checkbox" id="insert_lightbox" name="insert_lightbox"
                 onclick="if(this.checked){document.getElementById('create_thumbnail').checked=true;
@@ -204,8 +157,9 @@ HTML
             </select>
         </div>
 HTML
+            $tmpl->insertBefore($opt, $el);
+        }
     }
-    $tmpl->insertBefore($opt, $el);
 # < lightbox
 
     # Force the tokens of the template to be reprocessed now that

@@ -1,6 +1,7 @@
 name: Assetylene
 description: <__trans phrase='Provides a new "Caption" field when inserting an asset into a post, and the ability to customize the HTML markup produced for publishing MT assets.'>
 version: 1.12
+author_name: naoaki.onozaki
 author_link: http://www.zelazny.mydns.jp/
 plugin_link: http://github.com/naoaki011/mt-plugin-assetylene/
 doc_link: http://code.zelazny.mydns.jp/trac/myproject/wiki/MtPluginsAssetylene
