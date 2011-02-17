@@ -10,5 +10,5 @@ plugins/Assetylene/lib/Assetylene/L10N/fr.pm
 plugins/Assetylene/lib/Assetylene/L10N/ja.pm
 plugins/Assetylene/lib/Assetylene/L10N/nl.pm
 plugins/Assetylene/template/asset_insertion.mtml
-plugins/Assetylene/tmpl/blog_config.tmpl
+plugins/Assetylene/tmpl/blog_config_assetylene.tmpl
 README.txt
