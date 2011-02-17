@@ -25,6 +25,11 @@ sub asset_options_image {
     my $el = $tmpl->getElementById('image_alignment')
         or return;
 
+    my $blog = $app->blog;
+    my $insert_tmpl = $app->model('template')->load({
+        name => 'Asset Insertion', type => 'custom',
+        blog_id => [ $blog->id, 0 ] });
+
 # Caption >
     my $opt = $tmpl->createElement('app:setting', {
         id => 'asset_optins',
@@ -40,15 +45,29 @@ sub asset_options_image {
     my $caption_safe = MT::Util::encode_html( $asset->description );
 
         # Contents of the app:setting tag:
+    if ($insert_tmpl) {
         $opt->innerHTML(<<HTML);
-        <div class="field">
-            <input type="checkbox" id="insert_caption" name="insert_caption"
-                value="1" />
-            <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Insert a caption?'></__trans_section></label>
+<div class="field">
+    <input type="checkbox" id="insert_caption" name="insert_caption"
+        value="1" />
+    <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Insert a caption?'></__trans_section></label>
     <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols=""
         onfocus="getByID('insert_caption').checked=true; return false;"
         class="full-width">$caption_safe</textarea></div>
+</div>
 HTML
+    }
+    else {
+        $opt->innerHTML(<<HTML);
+<div class="field">
+    <input type="checkbox" id="insert_caption" name="insert_caption"
+        value="1" />
+    <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Set alt attribute in image?'></__trans_section></label>
+    <input type="text" name="caption" onfocus="getByID('insert_caption').checked=true; return false;"
+        value="$caption_safe" style="width:16em;" />
+</div>
+HTML
+    }
     # Insert new field above the 'image_alignment' field:
     $tmpl->insertBefore($opt, $el);
 
@@ -173,12 +192,27 @@ sub asset_insert {
     my $blog_id = $app->param('blog_id');
     my $upload_html = $param->{ upload_html };
 
+    my ($html_img_tag) = $upload_html =~ /(<img\b[^>]+?>)/s;
+    my ($html_img_src) = $html_img_tag =~ /\bsrc="([^\"]+)"/s;
+    my ($html_a_tag) = $upload_html =~ /(<a\b[^>]+?>)/s;
+    my ($html_a_href) = $html_a_tag =~ /\bhref="(.+?)"/s;
+
     use MT::Blog;
     my $blog = MT::Blog->load($blog_id) or die;
     my $themeid = $blog->theme_id;
     my $plugin = MT->component("Assetylene");
     my $scope = "blog:".$blog_id;
+
+    # Assertions:
+    # Load the user-defined "Asset Insertion" template module.
+    # Currently, this template must be named in English. Look both
+    # at the blog and system level for this template.
+    my $insert_tmpl = $app->model('template')->load({
+        name => 'Asset Insertion', type => 'custom',
+        blog_id => [ $blog->id, 0 ] });
+
     if ($themeid ne 'mtVicunaSimple') {
+
         my $cleanup_insert = $plugin->get_config_value('cleanup_insert',$scope);
         if ($cleanup_insert) {
             my $rightalign_class = $plugin->get_config_value('rightalign_class',$scope);
@@ -235,89 +269,109 @@ sub asset_insert {
             $insert_class = '<a '.$insert_class;
             $upload_html =~ s/<a/$insert_class/g;
         }
-    }
+        if ($app->param('insert_caption')) {
+            if ($app->param('caption')) {
+                my $alt_caption = ' alt="'.$app->param('caption').'"';
+                $upload_html =~ s/ alt=\"[^\"]+\"/$alt_caption/g;
+            }
+        }
 
-    my $blog = $app->blog;
+    }
 
     # Assertions:
     # Load the user-defined "Asset Insertion" template module.
     # Currently, this template must be named in English. Look both
     # at the blog and system level for this template.
-    my $insert_tmpl = $app->model('template')->load({
-        name => 'Asset Insertion', type => 'custom',
-        blog_id => [ $blog->id, 0 ] });
-    return unless $insert_tmpl;
+    if ($insert_tmpl) {
 
-    my $asset = $tmpl->context->stash('asset');
+        my $asset = $tmpl->context->stash('asset');
 
-    # Collect all the elements of the MT generated asset markup
-    # so they can be manipulated indepdendently by the user-defined
-    # template:
-    my $html = $upload_html;
-    my ($img_tag) = $html =~ /(<img\b[^>]+?>)/s;
-    my ($a_tag) = $html =~ /(<a\b[^>]+?>)/s;
-    my ($form_tag) = $html =~ /(<form[^>]+?>)/s;
+        # Collect all the elements of the MT generated asset markup
+        # so they can be manipulated indepdendently by the user-defined
+        # template:
+        my $html = $upload_html;
+        my ($img_tag) = $html =~ /(<img\b[^>]+?>)/s;
+        my ($a_tag) = $html =~ /(<a\b[^>]+?>)/s;
+        my ($form_tag) = $html =~ /(<form[^>]+?>)/s;
 
-    $param->{enclose} = 1 if $form_tag;
-    $param->{include} = 1 if $app->param('include');
-    $param->{thumb} = 1 if $app->param('thumb');
-    ($param->{align}) = $app->param('align') =~ m/(\w+)/;
-    $param->{caption} = $app->param('insert_caption') ? $app->param('caption') : '';
-    $param->{popup} = 1 if $app->param('popup');
+        $param->{enclose} = 1 if $form_tag;
+        $param->{include} = 1 if $app->param('include');
+        $param->{thumb} = 1 if $app->param('thumb');
+        ($param->{align}) = $app->param('align') =~ m/(\w+)/;
+        $param->{caption} = $app->param('insert_caption') ? $app->param('caption') : '';
+        $param->{popup} = 1 if $app->param('popup');
 
-    $param->{label} = $asset->label;
-    $param->{description} = $asset->description;
-    $param->{asset_id} = $asset->id;
+        $param->{label} = $asset->label;
+        $param->{description} = $asset->description;
+        $param->{asset_id} = $asset->id;
 
-    $param->{a_tag} = $a_tag;
-    ($param->{a_href}) = $a_tag =~ /\bhref="(.+?)"/s;
-    ($param->{a_onclick}) = $a_tag =~ /\bonclick="(.+?)"/s;
+        $param->{a_tag} = $a_tag;
+        ($param->{a_href}) = $a_tag =~ /\bhref="(.+?)"/s;
+        ($param->{a_onclick}) = $a_tag =~ /\bonclick="(.+?)"/s;
 
-    ($param->{a_style}) = $a_tag =~ /\bstyle="([^\"]+)"/s;
-    ($param->{a_class}) = $a_tag =~ /\bclass="([^\"]+)"/s;
-    ($param->{a_title}) = $a_tag =~ /\btitle="([^\"]+)"/s;
-    ($param->{a_rel}) = $a_tag =~ /\brel="([^\"]+)"/s;
+        ($param->{a_style}) = $a_tag =~ /\bstyle="([^\"]+)"/s;
+        ($param->{a_class}) = $a_tag =~ /\bclass="([^\"]+)"/s;
+        ($param->{a_title}) = $a_tag =~ /\btitle="([^\"]+)"/s;
+        ($param->{a_rel}) = $a_tag =~ /\brel="([^\"]+)"/s;
 
-    $param->{form_tag} = $form_tag;
-    ($param->{form_style}) = $form_tag =~ /\bstyle="([^\"]+)"/s;
-    ($param->{form_class}) = $form_tag =~ /\bclass="([^\"]+)"/s;
+        $param->{form_tag} = $form_tag;
+        ($param->{form_style}) = $form_tag =~ /\bstyle="([^\"]+)"/s;
+        ($param->{form_class}) = $form_tag =~ /\bclass="([^\"]+)"/s;
 
-    $param->{img_tag} = $img_tag;
-    ($param->{img_height}) = $img_tag =~ /\bheight="(\d+)"/;
-    ($param->{img_width}) = $img_tag =~ /\bwidth="(\d+)"/;
-    ($param->{img_src}) = $img_tag =~ /\bsrc="([^\"]+)"/s;
-    ($param->{img_style}) = $img_tag =~ /\bstyle="([^\"]+)"/s;
-    ($param->{img_class}) = $img_tag =~ /\bclass="([^\"]+)"/s;
-    ($param->{img_alt}) = $img_tag =~ /\balt="([^\"]+)"/s;
+        $param->{img_tag} = $img_tag;
+        ($param->{img_height}) = $img_tag =~ /\bheight="(\d+)"/;
+        ($param->{img_width}) = $img_tag =~ /\bwidth="(\d+)"/;
+        ($param->{img_src}) = $img_tag =~ /\bsrc="([^\"]+)"/s;
+        ($param->{img_style}) = $img_tag =~ /\bstyle="([^\"]+)"/s;
+        ($param->{img_class}) = $img_tag =~ /\bclass="([^\"]+)"/s;
+        ($param->{img_alt}) = $img_tag =~ /\balt="([^\"]+)"/s;
 
-    $param->{pattern} = $app->param('pattern');
+        $param->{pattern} = $app->param('pattern');
 
-    $insert_tmpl->param( $param );
+        $insert_tmpl->param( $param );
 
-    my $ctx = $insert_tmpl->context;
-    $ctx->stash('blog', $blog);
-    $ctx->stash('blog_id', $blog->id);
-    $ctx->stash('local_blog_id', $blog->id);
-    $ctx->stash('asset', $asset);
+        my $ctx = $insert_tmpl->context;
+        $ctx->stash('blog', $blog);
+        $ctx->stash('blog_id', $blog->id);
+        $ctx->stash('local_blog_id', $blog->id);
+        $ctx->stash('asset', $asset);
 
-    # Process the user-defined template:
-    my $new_html = $insert_tmpl->output;
+        # Process the user-defined template:
+        my $new_html = $insert_tmpl->output;
 
-    my $remove_blank = $plugin->get_config_value('remove_blank',$scope);
-    if ($remove_blank) {
-        $new_html =~ s/\s*\n+/\n/g;
-    }
+        my $remove_blank = $plugin->get_config_value('remove_blank',$scope);
+        if ($remove_blank) {
+            $new_html =~ s/\s*\n+/\n/g;
+        }
 
-    if (defined($new_html)) {
-        # Replace the MT generated asset markup with the user-defined
-        # markup:
-        $param->{upload_html} = $new_html;
+        if (defined($new_html)) {
+            # Replace the MT generated asset markup with the user-defined
+            # markup:
+            $param->{upload_html} = $new_html;
+        }
+        else {
+            # Template build error: die, so this gets logged (we're in a
+            # callback, so it won't be surfaced to the user unfortunately)
+            die "Error from Asset Insertion module: " . $insert_tmpl->errstr;
+        }
     }
     else {
-        # Template build error: die, so this gets logged (we're in a
-        # callback, so it won't be surfaced to the user unfortunately)
-        die "Error from Asset Insertion module: " . $insert_tmpl->errstr;
+        $param->{upload_html} = $upload_html;
     }
+}
+
+sub template_source_assetylene {
+    my ( $cb, $app, $tmpl ) = @_;
+    my $src = 'none';
+    my $blog_id = $app->param('blog_id');
+    my $insert_tmpl = $app->model('template')->load({
+        name => 'Asset Insertion', type => 'custom',
+        blog_id => [ $blog_id, 0 ] });
+
+    if ($insert_tmpl) {
+        $src = 'block';
+    }
+    $$tmpl =~ s/\*assetylene_options\*/$src/sg;
 }
 
 sub doLog {

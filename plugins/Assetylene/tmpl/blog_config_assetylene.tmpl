@@ -1,3 +1,4 @@
+<div id="asset_variables" style="display:*assetylene_options*;">
 <mtapp:setting
   id='insertion_pattern'
   label='<__trans phrase="Insertion Pattern">'
@@ -14,6 +15,16 @@
     <div style="float:left;width:6em;"><__trans phrase="Name">5</div>
     <input type="text" name="pattern5" name="pattern5" value="<mt:var name="pattern5" escape="html">" /><br />
 </mtapp:setting>
+<mtapp:setting
+  id="remove_blank"
+  label="<__trans phrase="Remove Blank">"
+  hint="<__trans phrase="Hint">">
+    <label for="remove_blank"><__trans phrase='Remove'></label>
+    <input type="radio" name="remove_blank"<mt:if name="remove_blank" eq="1"> checked="checked"</mt:if> value="1" />
+    <label for="remove_blank"><__trans phrase='Pass'></label>
+    <input type="radio" name="remove_blank"<mt:unless name="remove_blank"> checked="checked"</mt:unless> value="0" />
+</mtapp:setting>
+</div>
 
 <mtapp:setting
   id="cleanup_insert"
@@ -25,16 +36,6 @@
       <option<mt:if name="cleanup_insert" eq="1"> selected="selected"</mt:if> value="1"><__trans phrase="Add Class for Wrap Paragraph tag"></option>
       <option<mt:if name="cleanup_insert" eq="2"> selected="selected"</mt:if> value="2"><__trans phrase="Add Class for Image tag"></option>
     </select>
-</mtapp:setting>
-
-<mtapp:setting
-  id="remove_blank"
-  label="<__trans phrase="Remove Blank">"
-  hint="<__trans phrase="Hint">">
-    <label for="remove_blank"><__trans phrase='Remove'></label>
-    <input type="radio" name="remove_blank"<mt:if name="remove_blank" eq="1"> checked="checked"</mt:if> value="1" />
-    <label for="remove_blank"><__trans phrase='Pass'></label>
-    <input type="radio" name="remove_blank"<mt:unless name="remove_blank"> checked="checked"</mt:unless> value="0" />
 </mtapp:setting>
 
 <mtapp:setting

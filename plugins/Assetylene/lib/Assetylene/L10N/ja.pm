@@ -17,6 +17,7 @@ use vars qw( %Lexicon );
 	   => 'Assetylene プラグインにより使用される"Asset Insertion"モジュールのサンプルです。テンプレートモジュールのみです。テンプレートセットではありません。',
 	'AssetInsertion for Assetylene' => 'Assetyleneプラグイン用"Asset Insertion"モジュール',
 	'Insert a caption?' => 'キャプションを挿入',
+	'Set alt attribute in image?' => '表示画像のalt属性を指定',
 	'Asset Insertion' => 'アイテムを挿入する',
 	'Use Lightbox Effect' => 'Lightbox効果を使用する',
 	'CleanUp Asset Insert' => 'アイテム挿入をクリーンアップする',

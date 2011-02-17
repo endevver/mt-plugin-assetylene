@@ -2,6 +2,6 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME            => 'Assetylene',
-    VERSION         => '1.02',
+    VERSION         => '1.12',
     DISTNAME        => 'Assetylene',
 );

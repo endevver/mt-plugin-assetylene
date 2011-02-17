@@ -6,7 +6,7 @@ author_link: http://www.zelazny.mydns.jp/
 plugin_link: http://github.com/naoaki011/mt-plugin-assetylene/
 doc_link: http://code.zelazny.mydns.jp/trac/myproject/wiki/MtPluginsAssetylene
 l10n_class: Assetylene::L10N
-blog_config_template: tmpl/blog_config.tmpl
+blog_config_template: blog_config_assetylene.tmpl
 settings:
   cleanup_insert:
     default: 1
@@ -67,6 +67,7 @@ applications:
         callbacks:
             template_param.asset_options_image: $Assetylene::Assetylene::CMS::asset_options_image
             template_param.asset_insert: $Assetylene::Assetylene::CMS::asset_insert
+            MT::App::CMS::template_source.blog_config_assetylene: $Assetylene::Assetylene::CMS::template_source_assetylene
 templets:
     Assetylene:
         base_path: template
