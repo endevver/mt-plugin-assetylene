@@ -51,7 +51,7 @@ sub asset_options_image {
     <input type="checkbox" id="insert_caption" name="insert_caption"
         value="1" />
     <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Insert a caption?'></__trans_section></label>
-    <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols=""
+    <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols="60"
         onfocus="getByID('insert_caption').checked=true; return false;"
         class="full-width">$caption_safe</textarea></div>
 </div>
