@@ -4,7 +4,7 @@ version: 1.12
 author_name: naoaki.onozaki
 author_link: http://www.zelazny.mydns.jp/
 plugin_link: http://github.com/naoaki011/mt-plugin-assetylene/
-doc_link: http://code.zelazny.mydns.jp/trac/myproject/wiki/MtPluginsAssetylene
+doc_link: https://github.com/naoaki011/mt-plugin-assetylene/wiki
 l10n_class: Assetylene::L10N
 blog_config_template: blog_config_assetylene.tmpl
 settings:
