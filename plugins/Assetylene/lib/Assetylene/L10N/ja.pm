@@ -20,7 +20,7 @@ use vars qw( %Lexicon );
 	'Set alt attribute in image?' => '表示画像のalt属性を指定',
 	'Asset Insertion' => 'アイテムを挿入する',
 	'Use Lightbox Effect' => 'Lightbox効果を使用する',
-	'CleanUp Asset Insert' => 'アイテム挿入をクリーンアップする',
+	'CleanUp Asset Insert' => 'アイテム挿入を<br />クリーンアップする',
 	'No CleanUp' => 'クリーンアップしない',
 	'Add Class for Wrap Paragraph tag' => 'pタグで囲み、クラスを追加する',
 	'Add Class for Image tag' => 'imgタグにクラスを追加する',
@@ -38,6 +38,7 @@ use vars qw( %Lexicon );
 	'Limit Thumbnail Height' => 'サムネイルの高さを制限',
 	'Limit Image Width' => '画像の幅を制限',
 	'Limit Image Height' => '画像の高さを制限',
+	'Remove Popup Insert' => 'ポップアップウィンドウ<br />での挿入を削除する',
 );
 
 1;

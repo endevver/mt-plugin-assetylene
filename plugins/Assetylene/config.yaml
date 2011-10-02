@@ -62,6 +62,9 @@ settings:
   pattern5:
     default: ''
     scope: blog
+  remove_popup:
+    default: 0
+    scope: blog
 applications:
     cms:
         callbacks:

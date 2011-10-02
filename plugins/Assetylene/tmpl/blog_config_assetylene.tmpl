@@ -84,3 +84,11 @@
     <label><__trans phrase='No'></label>&nbsp;)
     <input type="text" name="lightbox_selector4" name="lightbox_selector3" value="<mt:var name="lightbox_selector4" escape="html">" /><br/>
 </mtapp:setting>
+
+<mtapp:setting
+  id="remove_popup"
+  label="<__trans phrase="Remove Popup Insert">"
+  hint="<__trans phrase="Hint">">
+    <label for="remove_popup"><__trans phrase='Remove'></label>
+    <input type="checkbox" name="remove_popup"<mt:if name="remove_popup"> checked="checked"</mt:if> value="1" />
+</mtapp:setting>
