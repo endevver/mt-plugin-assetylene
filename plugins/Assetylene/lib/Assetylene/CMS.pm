@@ -82,7 +82,7 @@ HTML
         show_hint => 0,
     });
 
-    my $blog_id = $app->param('blog_id');
+    my $blog_id = $blog->id;
     my $plugin = MT->component("Assetylene");
     my $scope = "blog:".$blog_id;
     my $insert_options = '';
@@ -129,8 +129,6 @@ HTML
         show_hint => 0,
     });
 
-    use MT::Blog;
-    my $blog = MT::Blog->load($blog_id) or die;
     my $themeid = $blog->theme_id;
     if ($themeid ne 'mtVicunaSimple') {
 
