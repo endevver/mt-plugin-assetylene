@@ -183,8 +183,8 @@ HTML
     my $remove_popup = $plugin->get_config_value('remove_popup',$scope);
     if ($remove_popup) {
         my $popup_element = $tmpl->getElementById('link_to_popup');
-        my $class_attr = $popup_element->getAttribute('class'); 
-        $class_attr = 'hidden ' . $class_attr;
+        my $class_attr = $popup_element->getAttribute('class') || ''; 
+        $class_attr = $class_attr ? ( 'hidden ' . $class_attr ) : 'hidden';
         $popup_element->setAttribute('class', $class_attr);
     }
 # < Remove Popup
