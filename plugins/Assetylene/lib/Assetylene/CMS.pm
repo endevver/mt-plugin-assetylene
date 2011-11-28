@@ -350,6 +350,11 @@ sub asset_insert {
         # Process the user-defined template:
         my $new_html = $insert_tmpl->output;
 
+        my $ua = $ENV{'HTTP_USER_AGENT'};
+        if ($ua =~ /MSIE/) {
+            $new_html =~ s/<!--[\s\S]*?-->//g;
+        }
+
         my $remove_blank = $plugin->get_config_value('remove_blank',$scope);
         if ($remove_blank) {
             $new_html =~ s/\s*\n+/\n/g;
