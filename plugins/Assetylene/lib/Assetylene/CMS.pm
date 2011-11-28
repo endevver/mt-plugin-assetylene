@@ -26,6 +26,9 @@ sub asset_options_image {
         or return;
 
     my $blog = $app->blog;
+    my $blog_id = $blog->id;
+    my $plugin = MT->component("Assetylene");
+    my $scope = "blog:".$blog_id;
     my $insert_tmpl = $app->model('template')->load({
         name => 'Asset Insertion', type => 'custom',
         blog_id => [ $blog->id, 0 ] });
@@ -74,48 +77,48 @@ HTML
 #< Caption
 # Pattern >
 
-    $opt = $tmpl->createElement('app:setting', {
-        id => 'asset_optins',
-        label => MT->translate('Asset Options'),
-        label_class => 'no-header',
-        hint => '',
-        show_hint => 0,
-    });
+    if ($insert_tmpl) {
 
-    my $blog_id = $blog->id;
-    my $plugin = MT->component("Assetylene");
-    my $scope = "blog:".$blog_id;
-    my $insert_options = '';
+        $opt = $tmpl->createElement('app:setting', {
+            id => 'asset_optins',
+            label => MT->translate('Asset Options'),
+            label_class => 'no-header',
+            hint => '',
+            show_hint => 0,
+        });
 
-    my $pattern_name1 = MT::Util::encode_html($plugin->get_config_value('pattern1',$scope),1);
-    if ($pattern_name1) {
-        $insert_options .= '<option value="1">' . $pattern_name1 . '</option>' . "\n";
-    }
-    my $pattern_name2 = MT::Util::encode_html($plugin->get_config_value('pattern2',$scope),1);
-    if ($pattern_name2) {
-        $insert_options .= '<option value="2">' . $pattern_name2 . '</option>' . "\n";
-    }
-    my $pattern_name3 = MT::Util::encode_html($plugin->get_config_value('pattern3',$scope),1);
-    if ($pattern_name3) {
-        $insert_options .= '<option value="3">' . $pattern_name3 . '</option>' . "\n";
-    }
-    my $pattern_name4 = MT::Util::encode_html($plugin->get_config_value('pattern4',$scope),1);
-    if ($pattern_name4) {
-        $insert_options .= '<option value="4">' . $pattern_name4 . '</option>' . "\n";
-    }
-    my $pattern_name5 = MT::Util::encode_html($plugin->get_config_value('pattern5',$scope),1);
-    if ($pattern_name5) {
-        $insert_options .= '<option value="5">' . $pattern_name5 . '</option>' . "\n";
-    }
+        my $insert_options = '';
+        my $pattern_name1 = MT::Util::encode_html($plugin->get_config_value('pattern1',$scope),1);
+        if ($pattern_name1) {
+            $insert_options .= '<option value="1">' . $pattern_name1 . '</option>' . "\n";
+        }
+        my $pattern_name2 = MT::Util::encode_html($plugin->get_config_value('pattern2',$scope),1);
+        if ($pattern_name2) {
+            $insert_options .= '<option value="2">' . $pattern_name2 . '</option>' . "\n";
+        }
+        my $pattern_name3 = MT::Util::encode_html($plugin->get_config_value('pattern3',$scope),1);
+        if ($pattern_name3) {
+            $insert_options .= '<option value="3">' . $pattern_name3 . '</option>' . "\n";
+        }
+        my $pattern_name4 = MT::Util::encode_html($plugin->get_config_value('pattern4',$scope),1);
+        if ($pattern_name4) {
+            $insert_options .= '<option value="4">' . $pattern_name4 . '</option>' . "\n";
+        }
+        my $pattern_name5 = MT::Util::encode_html($plugin->get_config_value('pattern5',$scope),1);
+        if ($pattern_name5) {
+            $insert_options .= '<option value="5">' . $pattern_name5 . '</option>' . "\n";
+        }
 
-    if ($insert_options) {
-        $opt->innerHTML(<<HTML);
+        if ($insert_options) {
+            $opt->innerHTML(<<HTML);
     <label for="pattern"><__trans_section component="Assetylene"><__trans phrase='Insertion Pattern'></__trans_section></label>
     <select name="pattern">
         $insert_options
     </select><br />
 HTML
-        $tmpl->insertBefore($opt, $el);
+            $tmpl->insertBefore($opt, $el);
+        }
+
     }
 
 #< Pattern
@@ -180,10 +183,10 @@ HTML
 # < lightbox
 # Remove Popup >
 
-    my $remove_popup = $plugin->get_config_value('remove_popup',$scope);
+    my $remove_popup = $plugin->get_config_value('remove_popup',$scope) || 1;
     if ($remove_popup) {
         my $popup_element = $tmpl->getElementById('link_to_popup');
-        my $class_attr = $popup_element->getAttribute('class') || ''; 
+        my $class_attr = $popup_element->getAttribute('class') || '';
         $class_attr = $class_attr ? ( 'hidden ' . $class_attr ) : 'hidden';
         $popup_element->setAttribute('class', $class_attr);
     }
