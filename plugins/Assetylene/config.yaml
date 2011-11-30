@@ -66,27 +66,27 @@ settings:
     default: 0
     scope: blog
 applications:
-    cms:
-        callbacks:
-            template_param.asset_options_image: $Assetylene::Assetylene::CMS::asset_options_image
-            template_param.asset_insert: $Assetylene::Assetylene::CMS::asset_insert
-            MT::App::CMS::template_source.blog_config_assetylene: $Assetylene::Assetylene::CMS::template_source_assetylene
+  cms:
+    callbacks:
+      template_param.asset_options_image: $Assetylene::Assetylene::CMS::asset_options_image
+      template_param.asset_insert: $Assetylene::Assetylene::CMS::asset_insert
+      MT::App::CMS::template_source.blog_config_assetylene: $Assetylene::Assetylene::CMS::template_source_assetylene
 templets:
-    Assetylene:
-        base_path: template
-        label: AssetInsertion for Assetylene
-        order: 99
-        templates:
-          module:
-            asset_insertion:
-              label: Asset Insertion
+  Assetylene:
+    base_path: template
+    label: AssetInsertion for Assetylene
+    order: 99
+    templates:
+      module:
+        asset_insertion:
+          label: Asset Insertion
 template_sets:
-    Assetylene:
-        base_path: template
-        label: AssetInsertion for Assetylene
-        description: <__trans phrase='Sample "Asset Insertion" module for Assetylene. This is a templete module. Not a Template Set.'>
-        order: 99
-        templates:
-          module:
-            asset_insertion:
-              label: Asset Insertion
+  Assetylene:
+    base_path: template
+    label: AssetInsertion for Assetylene
+    description: <__trans phrase='Sample "Asset Insertion" module for Assetylene. This is a templete module. Not a Template Set.'>
+    order: 99
+    templates:
+      module:
+        asset_insertion:
+          label: Asset Insertion

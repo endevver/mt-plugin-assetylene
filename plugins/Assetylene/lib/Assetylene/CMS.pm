@@ -1,7 +1,6 @@
 # This program is distributed under the terms of the
 # GNU General Public License, version 2.
 #
-# $Id: CMS.pm 1534 2009-05-24 23:52:58Z breese $
 
 package Assetylene::CMS;
 
@@ -25,13 +24,19 @@ sub asset_options_image {
     my $el = $tmpl->getElementById('image_alignment')
         or return;
 
-    my $blog = $app->blog;
-    my $blog_id = $blog->id;
+    my $blog = $app->blog or return;
     my $plugin = MT->component("Assetylene");
-    my $scope = "blog:".$blog_id;
+    my $scope = "blog:".$blog->id;
     my $insert_tmpl = $app->model('template')->load({
-        name => 'Asset Insertion', type => 'custom',
-        blog_id => [ $blog->id, 0 ] });
+                                                name => 'Asset Insertion',
+                                                type => 'custom',
+                                                blog_id => [ $blog->id, 0 ]
+                                               }) ||
+                      $app->model('template')->load({
+                                                identifier => 'asset_insertion',
+                                                type => 'custom',
+                                                blog_id => [ $blog->id, 0 ]
+                                               });
 
 # Caption >
     my $opt = $tmpl->createElement('app:setting', {
@@ -41,18 +46,15 @@ sub asset_options_image {
         hint => '',
         show_hint => 0,
     });
-
     require MT::Util;
     # Encode any special characters as HTML entities, since this
     # description is being placed in an HTML textarea:
     my $caption_safe = MT::Util::encode_html( $asset->description );
 
-        # Contents of the app:setting tag:
     if ($insert_tmpl) {
         $opt->innerHTML(<<HTML);
 <div class="field">
-    <input type="checkbox" id="insert_caption" name="insert_caption"
-        value="1" />
+    <input type="checkbox" id="insert_caption" name="insert_caption" value="1" />
     <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Insert a caption?'></__trans_section></label>
     <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols="60"
         onfocus="getByID('insert_caption').checked=true; return false;"
@@ -63,22 +65,17 @@ HTML
     else {
         $opt->innerHTML(<<HTML);
 <div class="field">
-    <input type="checkbox" id="insert_caption" name="insert_caption"
-        value="1" />
+    <input type="checkbox" id="insert_caption" name="insert_caption" value="1" />
     <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Set alt attribute in image?'></__trans_section></label>
     <input type="text" name="caption" onfocus="getByID('insert_caption').checked=true; return false;"
         value="$caption_safe" style="width:16em;" />
 </div>
 HTML
     }
-    # Insert new field above the 'image_alignment' field:
     $tmpl->insertBefore($opt, $el);
-
 #< Caption
 # Pattern >
-
     if ($insert_tmpl) {
-
         $opt = $tmpl->createElement('app:setting', {
             id => 'asset_optins',
             label => MT->translate('Asset Options'),
@@ -86,7 +83,6 @@ HTML
             hint => '',
             show_hint => 0,
         });
-
         my $insert_options = '';
         my $pattern_name1 = MT::Util::encode_html($plugin->get_config_value('pattern1',$scope),1);
         if ($pattern_name1) {
@@ -108,7 +104,6 @@ HTML
         if ($pattern_name5) {
             $insert_options .= '<option value="5">' . $pattern_name5 . '</option>' . "\n";
         }
-
         if ($insert_options) {
             $opt->innerHTML(<<HTML);
     <label for="pattern"><__trans_section component="Assetylene"><__trans phrase='Insertion Pattern'></__trans_section></label>
@@ -118,12 +113,9 @@ HTML
 HTML
             $tmpl->insertBefore($opt, $el);
         }
-
     }
-
 #< Pattern
 # lightbox >
-
     $opt = $tmpl->createElement('app:setting', {
         id => 'asset_lightbox',
         label => MT->translate('Lightbox'),
@@ -131,16 +123,13 @@ HTML
         hint => '',
         show_hint => 0,
     });
-
     my $themeid = $blog->theme_id;
     if ($themeid ne 'mtVicunaSimple') {
-
         my $lb_select1 = $plugin->get_config_value('lb_select1',$scope);
         my $lb_select2 = $plugin->get_config_value('lb_select2',$scope);
         my $lb_select3 = $plugin->get_config_value('lb_select3',$scope);
         my $lb_select4 = $plugin->get_config_value('lb_select4',$scope);
         if (($lb_select1) ||($lb_select2) || ($lb_select3) || ($lb_select4)) {
-
             my $insert_options = '';
             my $lightbox_selector1 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector1',$scope),1);
             if (($lb_select1) && ($lightbox_selector1)) {
@@ -161,7 +150,6 @@ HTML
             if ($insert_options eq '') {
                 $insert_options .= '<option value="rel=&quot;lightbox&quot;">rel=&quot;lightbox&quot;</option>' . "\n";
             }
-
             $opt->innerHTML(<<HTML);
         <div>
             <input type="checkbox" id="insert_lightbox" name="insert_lightbox"
@@ -182,7 +170,6 @@ HTML
     }
 # < lightbox
 # Remove Popup >
-
     my $remove_popup = $plugin->get_config_value('remove_popup',$scope) || 1;
     if ($remove_popup) {
         my $popup_element = $tmpl->getElementById('link_to_popup');
@@ -191,7 +178,6 @@ HTML
         $popup_element->setAttribute('class', $class_attr);
     }
 # < Remove Popup
-
     # Force the tokens of the template to be reprocessed now that
     # we've manipulated it:
     $tmpl->rescan();
@@ -214,16 +200,18 @@ sub asset_insert {
     my $plugin = MT->component("Assetylene");
     my $scope = "blog:".$blog_id;
 
-    # Assertions:
-    # Load the user-defined "Asset Insertion" template module.
-    # Currently, this template must be named in English. Look both
-    # at the blog and system level for this template.
     my $insert_tmpl = $app->model('template')->load({
-        name => 'Asset Insertion', type => 'custom',
-        blog_id => [ $blog->id, 0 ] });
+                                                name => 'Asset Insertion',
+                                                type => 'custom',
+                                                blog_id => [ $blog_id, 0 ]
+                                               }) ||
+                      $app->model('template')->load({
+                                                identifier => 'asset_insertion',
+                                                type => 'custom',
+                                                blog_id => [ $blog_id, 0 ]
+                                               });
 
     if ($themeid ne 'mtVicunaSimple') {
-
         my $cleanup_insert = $plugin->get_config_value('cleanup_insert',$scope);
         if ($cleanup_insert) {
             my $rightalign_class = $plugin->get_config_value('rightalign_class',$scope);
@@ -280,19 +268,14 @@ sub asset_insert {
             $insert_class = '<a '.$insert_class;
             $upload_html =~ s/<a/$insert_class/g;
         }
-        if ($app->param('insert_caption')) {
-            if ($app->param('caption')) {
-                my $alt_caption = ' alt="'.$app->param('caption').'"';
-                $upload_html =~ s/ alt=\"[^\"]+\"/$alt_caption/g;
-            }
+    }
+    if ($app->param('insert_caption')) {
+        if ($app->param('caption')) {
+            my $alt_caption = ' alt="'.$app->param('caption').'"';
+            $upload_html =~ s/ alt="[^"]+"/$alt_caption/g;
         }
-
     }
 
-    # Assertions:
-    # Load the user-defined "Asset Insertion" template module.
-    # Currently, this template must be named in English. Look both
-    # at the blog and system level for this template.
     if ($insert_tmpl) {
 
         my $asset = $tmpl->context->stash('asset');
@@ -354,6 +337,9 @@ sub asset_insert {
         if ($ua =~ /MSIE/) {
             $new_html =~ s/<!--[\s\S]*?-->//g;
         }
+        else {
+            # $new_html =~ s/<!--[\s\S]*?-->//g;
+        }
 
         my $remove_blank = $plugin->get_config_value('remove_blank',$scope);
         if ($remove_blank) {
@@ -381,9 +367,15 @@ sub template_source_assetylene {
     my $src = 'none';
     my $blog_id = $app->param('blog_id');
     my $insert_tmpl = $app->model('template')->load({
-        name => 'Asset Insertion', type => 'custom',
-        blog_id => [ $blog_id, 0 ] });
-
+                                                name => 'Asset Insertion',
+                                                type => 'custom',
+                                                blog_id => [ $blog_id, 0 ]
+                                               }) ||
+                      $app->model('template')->load({
+                                                identifier => 'asset_insertion',
+                                                type => 'custom',
+                                                blog_id => [ $blog_id, 0 ]
+                                               });
     if ($insert_tmpl) {
         $src = 'block';
     }
