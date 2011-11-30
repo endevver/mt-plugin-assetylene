@@ -38,8 +38,31 @@ sub asset_options_image {
                                                 blog_id => [ $blog->id, 0 ]
                                                });
 
-# Caption >
+# Without Link >
     my $opt = $tmpl->createElement('app:setting', {
+        id => 'without_link',
+        label => MT->translate('Insert without Link'),
+        label_class => 'no-header',
+        hint => '',
+        show_hint => 0,
+    });
+    $opt->innerHTML(<<HTML);
+    <div>
+        <input type="checkbox" id="without_link" name="without_link" value="1"
+            onclick="if (this.checked) {
+                         document.getElementById('insert_lightbox-field').style.display='none';
+                         document.getElementById('max_size-field').style.display='none';
+                     }else{
+                         document.getElementById('insert_lightbox-field').style.display='block';
+                         document.getElementById('max_size-field').style.display='block';
+                     }" />
+        <label for="without_link"><__trans_section component="Assetylene"><__trans phrase='Insert without Link'></__trans_section></label>
+    </div>
+HTML
+    $tmpl->insertBefore($opt, $el);
+#< Without Link
+# Caption >
+    $opt = $tmpl->createElement('app:setting', {
         id => 'asset_optins',
         label => MT->translate('Asset Options'),
         label_class => 'no-header',
@@ -274,6 +297,9 @@ sub asset_insert {
             my $alt_caption = ' alt="'.$app->param('caption').'"';
             $upload_html =~ s/ alt="[^"]+"/$alt_caption/g;
         }
+    }
+    if ($app->param('without_link')) {
+        $upload_html =~ s/^.*(<img [^>]+>).*$/\1/;
     }
 
     if ($insert_tmpl) {
