@@ -50,10 +50,20 @@ sub asset_options_image {
     <div>
         <input type="checkbox" id="without_link" name="without_link" value="1"
             onclick="if (this.checked) {
-                         document.getElementById('insert_lightbox-field').style.display='none';
+                         if (document.getElementById('insert_lightbox-field')) {
+                             document.getElementById('insert_lightbox-field').style.display='none';
+                         }
+                         else {
+                             document.getElementById('asset_lightbox-field').style.display='none';
+                         }
                          document.getElementById('max_size-field').style.display='none';
                      }else{
-                         document.getElementById('insert_lightbox-field').style.display='block';
+                         if (document.getElementById('insert_lightbox-field')) {
+                             document.getElementById('insert_lightbox-field').style.display='block';
+                         }
+                         else {
+                             document.getElementById('asset_lightbox-field').style.display='block';
+                         }
                          document.getElementById('max_size-field').style.display='block';
                      }" />
         <label for="without_link"><__trans_section component="Assetylene"><__trans phrase='Insert without Link'></__trans_section></label>
