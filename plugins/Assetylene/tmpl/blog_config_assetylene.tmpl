@@ -92,3 +92,19 @@
     <label for="remove_popup"><__trans phrase='Remove'></label>
     <input type="checkbox" name="remove_popup"<mt:if name="remove_popup"> checked="checked"</mt:if> value="1" />
 </mtapp:setting>
+
+<mtapp:setting
+  id="resize_link"
+  label="<__trans phrase="Limit size of Link Image">"
+  hint="<__trans phrase="Hint">">
+    <label for="remove_popup"><__trans phrase='Limited in'></label>
+    <input type="checkbox" name="resize_link"<mt:if name="resize_link"> checked="checked"</mt:if> value="1" />
+</mtapp:setting>
+
+<mtapp:setting
+  id="max_link_size"
+  label="<__trans phrase="Max size of Link Image">"
+  hint="<__trans phrase="Hint">">
+    <input type="text" style="width:4em;" name="max_link_width" value="<mt:var name="max_link_width">" /> x
+    <input type="text" style="width:4em;" name="max_link_height" value="<mt:var name="max_link_height">" />
+</mtapp:setting>

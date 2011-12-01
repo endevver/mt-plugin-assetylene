@@ -39,6 +39,12 @@ use vars qw( %Lexicon );
 	'Limit Image Width' => '画像の幅を制限',
 	'Limit Image Height' => '画像の高さを制限',
 	'Remove Popup Insert' => 'ポップアップウィンドウ<br />での挿入を削除する',
+	'Limit size of Link Image' => 'リンク画像のサイズ制限',
+	'Limited in' => '制限する',
+	'Max size of Link Image' => 'リンク画像の最大サイズ',
+	'Insert without Link' => 'リンク無しで挿入',
+	'Resize Link' => 'リンクを縮小する',
+	'Max Link Size' => 'リングサイズの最大値',
 );
 
 1;

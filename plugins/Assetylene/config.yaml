@@ -65,6 +65,15 @@ settings:
   remove_popup:
     default: 0
     scope: blog
+  resize_link:
+    default: 0
+    scope: blog
+  max_link_width:
+    default: 900
+    scope: blog
+  max_link_height:
+    default: ''
+    scope: blog
 applications:
   cms:
     callbacks:

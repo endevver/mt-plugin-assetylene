@@ -61,6 +61,43 @@ sub asset_options_image {
 HTML
     $tmpl->insertBefore($opt, $el);
 #< Without Link
+# Max Original Size >
+    my $resize_link = $plugin->get_config_value('resize_link',$scope) || 0;
+    my $resize_check = $resize_link ? 'hidden' : 'checkbox';
+    my $readonly_w = $resize_link ? ' readonly="readonly"' : '';
+    my $readonly_h = $resize_link ? ' readonly="readonly"' : '';
+    my $show_input = $resize_link ? 'block' : 'none';
+    my $max_link_width = $plugin->get_config_value('max_link_width',$scope);
+    my $max_link_height = $plugin->get_config_value('max_link_height',$scope);
+
+    $opt = $tmpl->createElement('app:setting', {
+        id => 'max_size',
+        label => MT->translate('Max Link Size'),
+        label_class => 'no-header',
+        hint => '',
+        show_hint => 0,
+    });
+    $opt->innerHTML(<<HTML);
+    <div>
+        <input type="$resize_check" id="resize_link" name="resize_link" value="1"
+            onclick="if (this.checked) {
+                         document.getElementById('max_size').style.display='block';
+                     }else{
+                         document.getElementById('max_size').style.display='none';
+                     }" />
+        <label><__trans_section component="Assetylene"><__trans phrase='Resize Link'></__trans_section></label>
+    </div>
+    <div id="max_size">
+        <label for="max_link_width"><__trans_section component="Assetylene"><__trans phrase='Max Link Size'></__trans_section></label>
+        <input type="text" id="max_link_width" name="max_link_width" value="$max_link_width" style="width:8em;"$readonly_w /> x 
+        <input type="text" id="max_link_height" name="max_link_height" value="$max_link_height" style="width:8em;"$readonly_h />
+    </div>
+    <script type="text/javascript">
+        document.getElementById('max_size').style.display='$show_input';
+    </script>
+HTML
+    $tmpl->insertBefore($opt, $el);
+#< Max Original Size
 # Caption >
     $opt = $tmpl->createElement('app:setting', {
         id => 'asset_optins',
@@ -301,10 +338,56 @@ sub asset_insert {
     if ($app->param('without_link')) {
         $upload_html =~ s/^.*(<img [^>]+>).*$/\1/;
     }
+    my $original = $tmpl->context->stash('asset');
+    my $resize_link = $plugin->get_config_value('resize_link',$scope) || $app->param('resize_link');
+    if ($resize_link) {
+        my $max_width = $app->param('max_link_width') || $plugin->get_config_value('max_link_width',$scope) || 0;
+        my $max_height = $app->param('max_link_height') || $plugin->get_config_value('max_link_height',$scope) || 0;
+        $max_width = ( $original->image_width > $max_width ) ? $max_width : 0;
+        $max_height = ( $original->image_height > $max_height ) ? $max_height : 0;
+        if ($max_width + $max_height) {
+            my %param;
+            $param{Width} = $max_width if $max_width;
+            $param{Height} = $max_height if $max_height;
+            my ( $thumbnail, $w, $h ) = $original->thumbnail_file( %param );
+            require MT::Asset;
+            (my $site_path = $blog->site_path) =~ s!\\!/!g;
+            my $site_url  = $blog->site_url;
+            my $regex_path = quotemeta( $site_path );
+            $thumbnail =~ s!\\!/!g;
+            (my $file_path  = $thumbnail)  =~ s/^$regex_path/%r/;
+            $thumbnail =~ s/^$regex_path/$site_url/;
+            $thumbnail =~ s!//!/!g;
+
+            my $asset_pkg = MT::Asset->handler_for_file($thumbnail);
+            my $asset = $asset_pkg->load({
+                'file_path' => $file_path,
+                'blog_id' => $blog->id,
+            }) || $asset_pkg->new;
+            unless ($asset->id) {
+                $asset->url( $file_path );
+                $asset->file_path( $file_path );
+                require File::Basename;
+                my $local_basename = File::Basename::basename($thumbnail);
+                $asset->file_name( $local_basename );
+                my $ext = ( File::Basename::fileparse( $thumbnail, qr/[A-Za-z0-9]+$/ ) )[2];
+                $asset->file_ext( $ext );
+                $asset->blog_id( $blog->id) ;
+                $asset->created_by( $app->user->id );
+                require LWP::MediaTypes;
+                my $mimetype = LWP::MediaTypes::guess_media_type( $asset->file_path );
+                $asset->mime_type($mimetype) if $mimetype;
+                $asset->image_width( $w );
+                $asset->image_height( $h );
+                $asset->parent( $original->id );
+                $asset->save
+                  or die;
+            }
+            $upload_html =~ s/href=".*?"/href="$thumbnail"/i;
+        }
+    }
 
     if ($insert_tmpl) {
-
-        my $asset = $tmpl->context->stash('asset');
 
         # Collect all the elements of the MT generated asset markup
         # so they can be manipulated indepdendently by the user-defined
@@ -321,9 +404,9 @@ sub asset_insert {
         $param->{caption} = $app->param('insert_caption') ? $app->param('caption') : '';
         $param->{popup} = 1 if $app->param('popup');
 
-        $param->{label} = $asset->label;
-        $param->{description} = $asset->description;
-        $param->{asset_id} = $asset->id;
+        $param->{label} = $original->label;
+        $param->{description} = $original->description;
+        $param->{asset_id} = $original->id;
 
         $param->{a_tag} = $a_tag;
         ($param->{a_href}) = $a_tag =~ /\bhref="(.+?)"/s;
@@ -354,7 +437,7 @@ sub asset_insert {
         $ctx->stash('blog', $blog);
         $ctx->stash('blog_id', $blog->id);
         $ctx->stash('local_blog_id', $blog->id);
-        $ctx->stash('asset', $asset);
+        $ctx->stash('asset', $original);
 
         # Process the user-defined template:
         my $new_html = $insert_tmpl->output;
