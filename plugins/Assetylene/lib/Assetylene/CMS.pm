@@ -344,7 +344,7 @@ sub asset_insert {
         }
     }
     if ($app->param('without_link')) {
-        $upload_html =~ s/^.*(<img [^>]+>).*$/\1/;
+        $upload_html =~ s/^.*(<img [^>]+>).*$/$1/;
     }
     my $original = $tmpl->context->stash('asset');
     my $resize_link = $plugin->get_config_value('resize_link',$scope) || $app->param('resize_link');
