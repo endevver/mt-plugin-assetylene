@@ -303,7 +303,7 @@ sub asset_insert {
                 }
                 $upload_html =~ s/ class=\"mt-image-(none|right|left|center)\"//g;
             }
-            if ($cleanup_insert == '2') {
+            elsif ($cleanup_insert == '2') {
                 $upload_html =~ s/ class=\"mt-image-none\"//i;
                 $rightalign_class = ' class="'.$rightalign_class.'"';
                 $upload_html =~ s/ class=\"mt-image-right\"/$rightalign_class/g;
@@ -313,8 +313,6 @@ sub asset_insert {
                     $centeralign_class = ' class="'.$centeralign_class.'"';
                 }
                 $upload_html =~ s/ class=\"mt-image-center\"/$centeralign_class/g;
-            } else {
-                $upload_html =~ s/ class=\"mt-image-(none|right|left|center)\"//g;
             }
             $upload_html =~ s/ style=\"\"//i;
             $upload_html =~ s/ style=\"float\: (right|left)\; margin\: 0 (0|20px) 20px (0|20px)\;\"//i;
