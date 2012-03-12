@@ -37,9 +37,9 @@ sub asset_options_image {
                                                 type => 'custom',
                                                 blog_id => [ $blog->id, 0 ]
                                                });
-
+    my $opt;
 # Without Link >
-    my $opt = $tmpl->createElement('app:setting', {
+    $opt = $tmpl->createElement('app:setting', {
         id => 'without_link',
         label => MT->translate('Insert without Link'),
         label_class => 'no-header',
@@ -110,7 +110,7 @@ HTML
 #< Max Original Size
 # Caption >
     $opt = $tmpl->createElement('app:setting', {
-        id => 'asset_optins',
+        id => 'asset_options',
         label => MT->translate('Asset Options'),
         label_class => 'no-header',
         hint => '',
@@ -146,40 +146,185 @@ HTML
 #< Caption
 # Pattern >
     if ($insert_tmpl) {
+        my $jquery_insert1 = '';
+        if ($plugin->get_config_value('remove_width1',$scope) || 0) {
+            $jquery_insert1 .= "jQuery('#create_thumbnail-field').hide();\n";
+        } else {
+            $jquery_insert1 .= "jQuery('#create_thumbnail-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_caption1',$scope) || 0) {
+            $jquery_insert1 .= "          jQuery('#asset_options-field').hide();\n";
+        } else {
+            $jquery_insert1 .= "          jQuery('#asset_options-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_lightbox1',$scope) || 0) {
+            $jquery_insert1 .= "          jQuery('#asset_lightbox-field').hide();\n";
+        } else {
+            $jquery_insert1 .= "          jQuery('#asset_lightbox-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_width1',$scope) || 0) {
+            $jquery_insert1 .= "          jQuery('#image_alignment-field').hide();\n";
+        } else {
+            $jquery_insert1 .= "          jQuery('#image_alignment-field').show();\n";
+        }
+        my $jquery_insert2 = '';
+        if ($plugin->get_config_value('remove_width2',$scope) || 0) {
+            $jquery_insert2 .= "jQuery('#create_thumbnail-field').hide();\n";
+        } else {
+            $jquery_insert2 .= "jQuery('#create_thumbnail-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_caption2',$scope) || 0) {
+            $jquery_insert2 .= "          jQuery('#asset_options-field').hide();\n";
+        } else {
+            $jquery_insert2 .= "          jQuery('#asset_options-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_lightbox2',$scope) || 0) {
+            $jquery_insert2 .= "          jQuery('#asset_lightbox-field').hide();\n";
+        } else {
+            $jquery_insert2 .= "          jQuery('#asset_lightbox-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_width2',$scope) || 0) {
+            $jquery_insert2 .= "          jQuery('#image_alignment-field').hide();\n";
+        } else {
+            $jquery_insert2 .= "          jQuery('#image_alignment-field').show();\n";
+        }
+        my $jquery_insert3 = '';
+        if ($plugin->get_config_value('remove_width3',$scope) || 0) {
+            $jquery_insert3 .= "jQuery('#create_thumbnail-field').hide();\n";
+        } else {
+            $jquery_insert3 .= "jQuery('#create_thumbnail-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_caption3',$scope) || 0) {
+            $jquery_insert3 .= "          jQuery('#asset_options-field').hide();\n";
+        } else {
+            $jquery_insert3 .= "          jQuery('#asset_options-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_lightbox3',$scope) || 0) {
+            $jquery_insert3 .= "          jQuery('#asset_lightbox-field').hide();\n";
+        } else {
+            $jquery_insert3 .= "          jQuery('#asset_lightbox-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_width3',$scope) || 0) {
+            $jquery_insert3 .= "          jQuery('#image_alignment-field').hide();\n";
+        } else {
+            $jquery_insert3 .= "          jQuery('#image_alignment-field').show();\n";
+        }
+        my $jquery_insert4 = '';
+        if ($plugin->get_config_value('remove_width4',$scope) || 0) {
+            $jquery_insert4 .= "jQuery('#create_thumbnail-field').hide();\n";
+        } else {
+            $jquery_insert4 .= "jQuery('#create_thumbnail-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_caption4',$scope) || 0) {
+            $jquery_insert4 .= "          jQuery('#asset_options-field').hide();\n";
+        } else {
+            $jquery_insert4 .= "          jQuery('#asset_options-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_lightbox4',$scope) || 0) {
+            $jquery_insert4 .= "          jQuery('#asset_lightbox-field').hide();\n";
+        } else {
+            $jquery_insert4 .= "          jQuery('#asset_lightbox-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_width4',$scope) || 0) {
+            $jquery_insert4 .= "          jQuery('#image_alignment-field').hide();\n";
+        } else {
+            $jquery_insert4 .= "          jQuery('#image_alignment-field').show();\n";
+        }
+        my $jquery_insert5 = '';
+        if ($plugin->get_config_value('remove_width5',$scope) || 0) {
+            $jquery_insert5 .= "jQuery('#create_thumbnail-field').hide();\n";
+        } else {
+            $jquery_insert5 .= "jQuery('#create_thumbnail-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_caption5',$scope) || 0) {
+            $jquery_insert5 .= "          jQuery('#asset_options-field').hide();\n";
+        } else {
+            $jquery_insert5 .= "          jQuery('#asset_options-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_lightbox5',$scope) || 0) {
+            $jquery_insert5 .= "          jQuery('#asset_lightbox-field').hide();\n";
+        } else {
+            $jquery_insert5 .= "          jQuery('#asset_lightbox-field').show();\n";
+        }
+        if ($plugin->get_config_value('remove_width5',$scope) || 0) {
+            $jquery_insert5 .= "          jQuery('#image_alignment-field').hide();\n";
+        } else {
+            $jquery_insert5 .= "          jQuery('#image_alignment-field').show();\n";
+        }
+
         $opt = $tmpl->createElement('app:setting', {
-            id => 'asset_optins',
-            label => MT->translate('Asset Options'),
+            id => 'insert_options',
+            label => MT->translate('Insert Options'),
             label_class => 'no-header',
             hint => '',
             show_hint => 0,
         });
         my $insert_options = '';
+        my $default_pattern = $plugin->get_config_value('default_pattern',$scope) || 1;
         my $pattern_name1 = MT::Util::encode_html($plugin->get_config_value('pattern1',$scope),1);
         if ($pattern_name1) {
-            $insert_options .= '<option value="1">' . $pattern_name1 . '</option>' . "\n";
+            $insert_options .= '<option value="1"';
+            if ($default_pattern == 1) {
+              $insert_options .= ' selected="selected"';
+            }
+            $insert_options .= '>' . $pattern_name1 . '</option>' . "\n";
         }
         my $pattern_name2 = MT::Util::encode_html($plugin->get_config_value('pattern2',$scope),1);
         if ($pattern_name2) {
-            $insert_options .= '<option value="2">' . $pattern_name2 . '</option>' . "\n";
+            $insert_options .= '<option value="2"';
+            if ($default_pattern == 2) {
+              $insert_options .= ' selected="selected"';
+            }
+            $insert_options .= '>' . $pattern_name2 . '</option>' . "\n";
         }
         my $pattern_name3 = MT::Util::encode_html($plugin->get_config_value('pattern3',$scope),1);
         if ($pattern_name3) {
-            $insert_options .= '<option value="3">' . $pattern_name3 . '</option>' . "\n";
+            $insert_options .= '<option value="3"';
+            if ($default_pattern == 3) {
+              $insert_options .= ' selected="selected"';
+            }
+            $insert_options .= '>' . $pattern_name3 . '</option>' . "\n";
         }
         my $pattern_name4 = MT::Util::encode_html($plugin->get_config_value('pattern4',$scope),1);
         if ($pattern_name4) {
-            $insert_options .= '<option value="4">' . $pattern_name4 . '</option>' . "\n";
+            $insert_options .= '<option value="4"';
+            if ($default_pattern == 4) {
+              $insert_options .= ' selected="selected"';
+            }
+            $insert_options .= '>' . $pattern_name4 . '</option>' . "\n";
         }
         my $pattern_name5 = MT::Util::encode_html($plugin->get_config_value('pattern5',$scope),1);
         if ($pattern_name5) {
-            $insert_options .= '<option value="5">' . $pattern_name5 . '</option>' . "\n";
+            $insert_options .= '<option value="5"';
+            if ($default_pattern == 5) {
+              $insert_options .= ' selected="selected"';
+            }
+            $insert_options .= '>' . $pattern_name5 . '</option>' . "\n";
         }
         if ($insert_options) {
             $opt->innerHTML(<<HTML);
     <label for="pattern"><__trans_section component="Assetylene"><__trans phrase='Insertion Pattern'></__trans_section></label>
-    <select name="pattern">
+    <select name="pattern" id="pattern">
         $insert_options
     </select><br />
+    <script type="text/javascript">
+    jQuery(document).ready(function(){
+      jQuery('select#pattern').change(function () {
+        var str = jQuery('select option:selected').val();
+        if (str == 1) {
+          $jquery_insert1
+        } else if (str == 2) {
+          $jquery_insert2
+        } else if (str == 3) {
+          $jquery_insert3
+        } else if (str == 4) {
+          $jquery_insert4
+        } else if (str ==5) {
+          $jquery_insert5
+        }
+      }).change();
+    });
+    </script>
 HTML
             $tmpl->insertBefore($opt, $el);
         }
@@ -482,6 +627,7 @@ sub asset_insert {
 sub template_source_assetylene {
     my ( $cb, $app, $tmpl ) = @_;
     my $src = 'none';
+    my $insertion = 'block';
     my $blog_id = $app->param('blog_id');
     my $insert_tmpl = $app->model('template')->load({
                                                 name => 'Asset Insertion',
@@ -495,8 +641,10 @@ sub template_source_assetylene {
                                                });
     if ($insert_tmpl) {
         $src = 'block';
+        $insertion = 'none';
     }
     $$tmpl =~ s/\*assetylene_options\*/$src/sg;
+    $$tmpl =~ s/\*module_installed\*/$insertion/sg;
 }
 
 sub doLog {

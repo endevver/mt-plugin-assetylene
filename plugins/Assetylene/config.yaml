@@ -74,11 +74,76 @@ settings:
   max_link_height:
     default: ''
     scope: blog
+  default_pattern:
+    default: 1
+    scope: blog
+  remove_width1:
+    default: 0
+    scope: blog
+  remove_width2:
+    default: 0
+    scope: blog
+  remove_width3:
+    default: 0
+    scope: blog
+  remove_width4:
+    default: 0
+    scope: blog
+  remove_width5:
+    default: 0
+    scope: blog
+  remove_caption1:
+    default: 0
+    scope: blog
+  remove_caption2:
+    default: 0
+    scope: blog
+  remove_caption3:
+    default: 0
+    scope: blog
+  remove_caption4:
+    default: 0
+    scope: blog
+  remove_caption5:
+    default: 0
+    scope: blog
+  remove_lightbox1:
+    default: 0
+    scope: blog
+  remove_lightbox2:
+    default: 0
+    scope: blog
+  remove_lightbox3:
+    default: 0
+    scope: blog
+  remove_lightbox4:
+    default: 0
+    scope: blog
+  remove_lightbox5:
+    default: 0
+    scope: blog
+  remove_align1:
+    default: 0
+    scope: blog
+  remove_align2:
+    default: 0
+    scope: blog
+  remove_align3:
+    default: 0
+    scope: blog
+  remove_align4:
+    default: 0
+    scope: blog
+  remove_align5:
+    default: 0
+    scope: blog
 applications:
   cms:
     callbacks:
       template_param.asset_options_image: $Assetylene::Assetylene::CMS::asset_options_image
-      template_param.asset_insert: $Assetylene::Assetylene::CMS::asset_insert
+      template_param.asset_insert: 
+        code: $Assetylene::Assetylene::CMS::asset_insert
+        priority: 9
       MT::App::CMS::template_source.blog_config_assetylene: $Assetylene::Assetylene::CMS::template_source_assetylene
 templets:
   Assetylene:

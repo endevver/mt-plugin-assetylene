@@ -45,7 +45,11 @@ use vars qw( %Lexicon );
 	'Insert without Link' => 'リンク無しで挿入',
 	'Resize Link' => 'リンクを縮小する',
 	'Max Link Size' => 'リングサイズの最大値',
+	'Prefs of Asset Insertion module.' => 'アイテム挿入モジュールの設定',
+	'remove width' => '幅入力を削除',
+	'remove caption' => 'キャプション入力を削除',
+	'remove lightbox' => 'lightbox指定を削除',
+	'remove align' => '配置を削除',
 );
 
 1;
-
