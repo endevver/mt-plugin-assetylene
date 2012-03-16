@@ -197,12 +197,16 @@
     <input type="checkbox" name="convert_html"<mt:if name="convert_html"> checked="checked"</mt:if> value="1" />
 </mtapp:setting>
 
-
 <div id="module_installed" style="display:*module_installed*;">
 <mtapp:setting
   id="create_module"
   label="<__trans phrase="Create Insertion Module in this Blog.">"
   hint="<__trans phrase="Hint">">
-    <button type="button" name="create_module" value="create_module"><__trans phrase="Create Insertion Module"></button>
+    <button type="button" type="submit" accesskey="s"
+        class="save action primary button"
+        onclick="location.href='*module_install_url*'; return false;"
+    >
+           <__trans phrase="Create Insertion Module">
+    </button>
 </mtapp:setting>
 </div>

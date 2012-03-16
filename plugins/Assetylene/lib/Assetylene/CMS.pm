@@ -680,8 +680,81 @@ sub template_source_assetylene {
     if ($global_tmpl) {
         $src = 'block';
     }
+    my $install_url = '?__mode=install_blog_templates&amp;blog_id=' . $blog_id;
+    $install_url .= '&amp;magic_token=' . $app->current_magic;
+    
     $$tmpl =~ s/\*assetylene_options\*/$src/sg;
     $$tmpl =~ s/\*module_installed\*/$insertion/sg;
+    $$tmpl =~ s/\*module_install_url\*/$install_url/sg;
+
+}
+
+sub install_blog_templates {
+    my $app = shift;
+    my $blog_id = $app->param('blog_id')
+      or return MT->translate( 'Invalid request.' );
+    my $blog = MT->model('blog')->load($blog_id)
+      or return MT->translate( 'Invalid request.' );
+    $app->validate_magic()
+      or return MT->translate( 'Permission denied.' );
+    my $user = $app->user
+      or return;
+    if (! is_user_can( $blog, $user, 'edit_templates' ) ) {
+        return MT->translate( 'Permission denied.' );
+    }
+    my $insert_tmpl = MT->model('template')->load({
+                                                name => 'Asset Insertion',
+                                                type => 'custom',
+                                                blog_id => $blog_id
+                                               }) ||
+                      MT->model('template')->load({
+                                                identifier => 'asset_insertion',
+                                                type => 'custom',
+                                                blog_id => $blog_id
+                                               });
+    return MT->translate( 'Already installed.' ) if ($insert_tmpl);
+    my $plugin = MT->component("Assetylene");
+    my $path = $plugin->path . "/template/";
+    opendir DH, $path
+      or return $app->error($plugin->translate('Open directory error'));
+    my $fmgr = $blog->file_mgr;
+    my $file_name = $path . 'asset_insertion.mtml';
+    my $template_text =$fmgr->get_data($file_name)
+      or return MT->translate( 'Open file error.' );
+    $template_text = MT::I18N::encode_text($template_text, 'utf8', $app->charset)
+      if (defined($template_text));
+    my $template = MT->model('template')->new
+      or return MT->translate( 'Create template error.' );
+    $template->blog_id($blog_id);
+    $template->created_by($user->id);
+    $template->identifier('asset_insertion');
+    $template->name('Asset Insertion');
+    $template->type('custom');
+    $template->text($template_text);
+    $template->save
+      or return;
+    my $cgi = $app->{cfg}->CGIPath . $app->{cfg}->AdminScript;
+    $app->redirect( "$cgi?__mode=list_template&blog_id=$blog_id&saved=1" );
+}
+
+sub install_global_templates {
+    $app->redirect( "$cgi?__mode=list_template&blog_id=0" );
+}
+
+sub is_user_can {
+    my ( $blog, $user, $permission ) = @_;
+    $permission = 'can_' . $permission;
+    my $perm = $user->is_superuser;
+    unless ( $perm ) {
+        if ( $blog ) {
+            my $admin = 'can_administer_blog';
+            $perm = $user->permissions( $blog->id )->$admin;
+            $perm = $user->permissions( $blog->id )->$permission unless $perm;
+        } else {
+            $perm = $user->permissions()->$permission;
+        }
+    }
+    return $perm;
 }
 
 sub doLog {

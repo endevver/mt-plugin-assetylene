@@ -40,8 +40,9 @@ use vars qw( %Lexicon );
 	'Limit Image Height' => '画像の高さを制限',
 	'Remove Popup Insert' => 'ポップアップウィンドウ<br />での挿入を削除する',
 	'Limit size of Link Image' => 'リンク画像のサイズ制限',
-	'Limited in' => '制限する',
+	'Always Limited in' => '常に制限する',
 	'Max size of Link Image' => 'リンク画像の最大サイズ',
+	'Default Max size of Link Image' => 'デフォルトのリンク画像最大サイズ',
 	'Insert without Link' => 'リンク無しで挿入',
 	'Resize Link' => 'リンクを縮小する',
 	'Max Link Size' => 'リングサイズの最大値',
@@ -51,6 +52,11 @@ use vars qw( %Lexicon );
 	'remove lightbox' => 'lightbox指定を削除',
 	'remove align' => '配置を削除',
 	'Only remove style' => 'スタイル指定のみ削除',
+	'Output HTML' => 'HTML出力',
+	'Convert to HTML' => 'HTMLに変換',
+	'Add Class for Wrap Div tag' => 'diivタグで囲み、クラスを追加する',
+	'Create Insertion Module in this Blog.' => 'このブログに挿入用モジュールを作成する',
+	'Create Insertion Module' => 'モジュールを作成',
 );
 
 1;
