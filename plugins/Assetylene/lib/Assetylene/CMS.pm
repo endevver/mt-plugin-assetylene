@@ -38,48 +38,14 @@ sub asset_options_image {
                                                 blog_id => [ $blog->id, 0 ]
                                                });
     my $opt;
-# Without Link >
-    $opt = $tmpl->createElement('app:setting', {
-        id => 'without_link',
-        label => MT->translate('Insert without Link'),
-        label_class => 'no-header',
-        hint => '',
-        show_hint => 0,
-    });
-    $opt->innerHTML(<<HTML);
-    <div>
-        <input type="checkbox" id="without_link" name="without_link" value="1"
-            onclick="if (this.checked) {
-                         if (document.getElementById('insert_lightbox-field')) {
-                             document.getElementById('insert_lightbox-field').style.display='none';
-                         }
-                         else {
-                             document.getElementById('asset_lightbox-field').style.display='none';
-                         }
-                         document.getElementById('max_size-field').style.display='none';
-                     }else{
-                         if (document.getElementById('insert_lightbox-field')) {
-                             document.getElementById('insert_lightbox-field').style.display='block';
-                         }
-                         else {
-                             document.getElementById('asset_lightbox-field').style.display='block';
-                         }
-                         document.getElementById('max_size-field').style.display='block';
-                     }" />
-        <label for="without_link"><__trans_section component="Assetylene"><__trans phrase='Insert without Link'></__trans_section></label>
-    </div>
-HTML
-    $tmpl->insertBefore($opt, $el);
-#< Without Link
-# Max Original Size >
+# Without Link Max Original Size >
     my $resize_link = $plugin->get_config_value('resize_link',$scope) || 0;
     my $resize_check = $resize_link ? 'hidden' : 'checkbox';
     my $readonly_w = $resize_link ? ' readonly="readonly"' : '';
     my $readonly_h = $resize_link ? ' readonly="readonly"' : '';
-    my $show_input = $resize_link ? 'block' : 'none';
+    my $show_input = $resize_link ? 'show();' : 'hide();';
     my $max_link_width = $plugin->get_config_value('max_link_width',$scope);
     my $max_link_height = $plugin->get_config_value('max_link_height',$scope);
-
     $opt = $tmpl->createElement('app:setting', {
         id => 'max_size',
         label => MT->translate('Max Link Size'),
@@ -89,61 +55,114 @@ HTML
     });
     $opt->innerHTML(<<HTML);
     <div>
-        <input type="$resize_check" id="resize_link" name="resize_link" value="1"
-            onclick="if (this.checked) {
-                         document.getElementById('max_size').style.display='block';
-                     }else{
-                         document.getElementById('max_size').style.display='none';
-                     }" />
-        <label><__trans_section component="Assetylene"><__trans phrase='Resize Link'></__trans_section></label>
+        <span>
+            <input type="checkbox" id="without_link" name="without_link" value="1" />
+            <label for="without_link"><__trans_section component="Assetylene"><__trans phrase='Insert without Link'></__trans_section></label>
+        </span>
+        <span id ="max_size-select">
+            <input type="$resize_check" id="resize_link" name="resize_link" value="1" />
+            <label><__trans_section component="Assetylene"><__trans phrase='Resize Link'></__trans_section></label>
+        </span>
     </div>
-    <div id="max_size">
+    <div id="max_size-input">
         <label for="max_link_width"><__trans_section component="Assetylene"><__trans phrase='Max Link Size'></__trans_section></label>
         <input type="text" id="max_link_width" name="max_link_width" value="$max_link_width" style="width:8em;"$readonly_w /> x 
         <input type="text" id="max_link_height" name="max_link_height" value="$max_link_height" style="width:8em;"$readonly_h />
     </div>
     <script type="text/javascript">
-        document.getElementById('max_size').style.display='$show_input';
+    jQuery(document).ready(function(){
+        if (jQuery('#create_thumbnail').attr('checked') == false) {
+            jQuery('#max_size-field').hide();
+        }
+        jQuery('#create_thumbnail').click(function() {
+            if (jQuery('#create_thumbnail').attr('checked') == true) {
+                jQuery('#max_size-field').show();
+            } else {
+                jQuery('#max_size-field').hide();
+            }
+        });
+        jQuery('#max_size-input').$show_input
+        jQuery('#without_link').click(function() {
+            if (jQuery('#without_link').attr('checked') == true) {
+                jQuery('#asset_lightbox-field').hide();
+                jQuery('#max_size-select').hide();
+                jQuery('#max_size-input').hide();
+            } else {
+                jQuery('#asset_lightbox-field').show();
+                jQuery('#max_size-select').show();
+                if (jQuery('#max_size-select').attr('checked') == true) {
+                    jQuery('#max_size-input').show();
+                }
+            }
+        });
+        jQuery('#resize_link').click(function() {
+            if (jQuery('#resize_link').attr('checked') == true) {
+                jQuery('#max_size-input').show();
+            } else {
+                jQuery('#max_size-input').hide();
+            }
+        });
+    });
     </script>
 HTML
     $tmpl->insertBefore($opt, $el);
+
+
 #< Max Original Size
-# Caption >
+# lightbox >
     $opt = $tmpl->createElement('app:setting', {
-        id => 'asset_options',
-        label => MT->translate('Asset Options'),
+        id => 'asset_lightbox',
+        label => MT->translate('Lightbox'),
         label_class => 'no-header',
         hint => '',
         show_hint => 0,
     });
-    require MT::Util;
-    # Encode any special characters as HTML entities, since this
-    # description is being placed in an HTML textarea:
-    my $caption_safe = MT::Util::encode_html( $asset->description );
-
-    if ($insert_tmpl) {
-        $opt->innerHTML(<<HTML);
-<div class="field">
-    <input type="checkbox" id="insert_caption" name="insert_caption" value="1" />
-    <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Insert a caption?'></__trans_section></label>
-    <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols="60"
-        onfocus="getByID('insert_caption').checked=true; return false;"
-        class="full-width">$caption_safe</textarea></div>
-</div>
+    my $themeid = $blog->theme_id;
+    if ($themeid ne 'mtVicunaSimple') {
+        my $lb_select1 = $plugin->get_config_value('lb_select1',$scope);
+        my $lb_select2 = $plugin->get_config_value('lb_select2',$scope);
+        my $lb_select3 = $plugin->get_config_value('lb_select3',$scope);
+        my $lb_select4 = $plugin->get_config_value('lb_select4',$scope);
+        if (($lb_select1) ||($lb_select2) || ($lb_select3) || ($lb_select4)) {
+            my $insert_options = '';
+            my $lightbox_selector1 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector1',$scope),1);
+            if (($lb_select1) && ($lightbox_selector1)) {
+                $insert_options .= '<option value="' . $lightbox_selector1 . '">' . $lightbox_selector1 . '</option>' . "\n";
+            }
+            my $lightbox_selector2 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector2',$scope),1);
+            if (($lb_select2) && ($lightbox_selector2)) {
+                $insert_options .= '<option value="' . $lightbox_selector2 . '">' . $lightbox_selector2 . '</option>' . "\n";
+            }
+            my $lightbox_selector3 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector3',$scope),1);
+            if (($lb_select3) && ($lightbox_selector3)) {
+                $insert_options .= '<option value="' . $lightbox_selector3 . '">' . $lightbox_selector3 . '</option>' . "\n";
+            }
+            my $lightbox_selector4 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector4',$scope),1);
+            if (($lb_select4) && ($lightbox_selector4)) {
+               $insert_options .= '<option value="' . $lightbox_selector4 . '">' . $lightbox_selector4 . '</option>' . "\n";
+            }
+            if ($insert_options eq '') {
+                $insert_options .= '<option value="rel=&quot;lightbox&quot;">rel=&quot;lightbox&quot;</option>' . "\n";
+            }
+            $opt->innerHTML(<<HTML);
+        <div>
+            <input type="checkbox" id="insert_lightbox" name="insert_lightbox"
+                onclick="if(this.checked){document.getElementById('create_thumbnail').checked=true;
+                  document.getElementById('thumb_width').focus();
+                }else{
+                  document.getElementById('create_thumbnail').checked=false;
+                }"
+                value="1"<mt:if name="make_thumb"> checked="checked" </mt:if> />
+            <label for="insert_lightbox"><__trans_section component="Assetylene"><__trans phrase='Use Lightbox Effect'></__trans_section></label>
+            <select id="insert_class" name="insert_class">
+                $insert_options
+            </select>
+        </div>
 HTML
+            $tmpl->insertBefore($opt, $el);
+        }
     }
-    else {
-        $opt->innerHTML(<<HTML);
-<div class="field">
-    <input type="checkbox" id="insert_caption" name="insert_caption" value="1" />
-    <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Set alt attribute in image?'></__trans_section></label>
-    <input type="text" name="caption" onfocus="getByID('insert_caption').checked=true; return false;"
-        value="$caption_safe" style="width:16em;" />
-</div>
-HTML
-    }
-    $tmpl->insertBefore($opt, $el);
-#< Caption
+# < lightbox
 # Pattern >
     if ($insert_tmpl) {
         my $jquery_insert1 = '';
@@ -330,60 +349,49 @@ HTML
         }
     }
 #< Pattern
-# lightbox >
+# Caption >
     $opt = $tmpl->createElement('app:setting', {
-        id => 'asset_lightbox',
-        label => MT->translate('Lightbox'),
+        id => 'asset_options',
+        label => MT->translate('Asset Options'),
         label_class => 'no-header',
         hint => '',
         show_hint => 0,
     });
-    my $themeid = $blog->theme_id;
-    if ($themeid ne 'mtVicunaSimple') {
-        my $lb_select1 = $plugin->get_config_value('lb_select1',$scope);
-        my $lb_select2 = $plugin->get_config_value('lb_select2',$scope);
-        my $lb_select3 = $plugin->get_config_value('lb_select3',$scope);
-        my $lb_select4 = $plugin->get_config_value('lb_select4',$scope);
-        if (($lb_select1) ||($lb_select2) || ($lb_select3) || ($lb_select4)) {
-            my $insert_options = '';
-            my $lightbox_selector1 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector1',$scope),1);
-            if (($lb_select1) && ($lightbox_selector1)) {
-                $insert_options .= '<option value="' . $lightbox_selector1 . '">' . $lightbox_selector1 . '</option>' . "\n";
-            }
-            my $lightbox_selector2 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector2',$scope),1);
-            if (($lb_select2) && ($lightbox_selector2)) {
-                $insert_options .= '<option value="' . $lightbox_selector2 . '">' . $lightbox_selector2 . '</option>' . "\n";
-            }
-            my $lightbox_selector3 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector3',$scope),1);
-            if (($lb_select3) && ($lightbox_selector3)) {
-                $insert_options .= '<option value="' . $lightbox_selector3 . '">' . $lightbox_selector3 . '</option>' . "\n";
-            }
-            my $lightbox_selector4 = MT::Util::encode_html($plugin->get_config_value('lightbox_selector4',$scope),1);
-            if (($lb_select4) && ($lightbox_selector4)) {
-               $insert_options .= '<option value="' . $lightbox_selector4 . '">' . $lightbox_selector4 . '</option>' . "\n";
-            }
-            if ($insert_options eq '') {
-                $insert_options .= '<option value="rel=&quot;lightbox&quot;">rel=&quot;lightbox&quot;</option>' . "\n";
-            }
-            $opt->innerHTML(<<HTML);
-        <div>
-            <input type="checkbox" id="insert_lightbox" name="insert_lightbox"
-                onclick="if(this.checked){document.getElementById('create_thumbnail').checked=true;
-                  document.getElementById('thumb_width').focus();
-                }else{
-                  document.getElementById('create_thumbnail').checked=false;
-                }"
-                value="1"<mt:if name="make_thumb"> checked="checked" </mt:if> />
-            <label for="insert_lightbox"><__trans_section component="Assetylene"><__trans phrase='Use Lightbox Effect'></__trans_section></label>
-            <select id="insert_class" name="insert_class">
-                $insert_options
-            </select>
-        </div>
+    require MT::Util;
+    # Encode any special characters as HTML entities, since this
+    # description is being placed in an HTML textarea:
+    my $caption_safe = MT::Util::encode_html( $asset->description )
+                    || MT::Util::encode_html( $asset->label );
+
+    if ($insert_tmpl) {
+        $opt->innerHTML(<<HTML);
+<div class="field">
+    <input type="checkbox" id="insert_caption" name="insert_caption" value="1" />
+    <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Insert a caption?'></__trans_section></label>
+    <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols="60"
+        onfocus="getByID('insert_caption').checked=true; return false;"
+        class="full-width">$caption_safe</textarea></div>
+    <input type="hidden" name="save_as" value="description" />
+</div>
 HTML
-            $tmpl->insertBefore($opt, $el);
-        }
     }
-# < lightbox
+    else {
+        $opt->innerHTML(<<HTML);
+<div class="field">
+    <input type="checkbox" id="insert_caption" name="insert_caption" value="1" />
+    <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Set alt attribute in image?'></__trans_section></label>
+    <input type="text" name="caption" onfocus="getByID('insert_caption').checked=true; return false;"
+        value="$caption_safe" style="width:16em;" />&nbsp;<__trans_section component="Assetylene"><__trans phrase='and Save as'></__trans_section>
+    <select name="sava_as">
+        <option value=""><__trans phrase='None'></option>
+        <option value="label"><__trans phrase='Label'></option>
+        <option value="description"><__trans phrase='Description'></option>
+    </select>
+</div>
+HTML
+    }
+    $tmpl->insertBefore($opt, $el);
+#< Caption
 # Remove Popup >
     my $remove_popup = $plugin->get_config_value('remove_popup',$scope) || 1;
     if ($remove_popup) {
@@ -402,18 +410,17 @@ sub asset_insert {
     my ($cb, $app, $param, $tmpl) = @_;
 
     my $blog_id = $app->param('blog_id');
-    my $upload_html = $param->{ upload_html };
-
-    my ($html_img_tag) = $upload_html =~ /(<img\b[^>]+?>)/s;
-    my ($html_img_src) = $html_img_tag =~ /\bsrc="([^\"]+)"/s;
-    my ($html_a_tag) = $upload_html =~ /(<a\b[^>]+?>)/s;
-    my ($html_a_href) = $html_a_tag =~ /\bhref="(.+?)"/s;
-
     use MT::Blog;
     my $blog = MT::Blog->load($blog_id) or die;
     my $themeid = $blog->theme_id;
     my $plugin = MT->component("Assetylene");
     my $scope = "blog:".$blog_id;
+
+    my $upload_html = $param->{ upload_html };
+    my ($html_img_tag) = $upload_html =~ /(<img\b[^>]+?>)/s;
+    my ($html_img_src) = $html_img_tag =~ /\bsrc="([^\"]+)"/s;
+    my ($html_a_tag) = $upload_html =~ /(<a\b[^>]+?>)/s;
+    my ($html_a_href) = $html_a_tag =~ /\bhref="(.+?)"/s;
 
     my $insert_tmpl = $app->model('template')->load({
                                                 name => 'Asset Insertion',
@@ -426,39 +433,34 @@ sub asset_insert {
                                                 blog_id => [ $blog_id, 0 ]
                                                });
 
-    if ($themeid ne 'mtVicunaSimple') {
-        my $cleanup_insert = $plugin->get_config_value('cleanup_insert',$scope);
+    my $original = $tmpl->context->stash('asset')
+      or return;
+
+    unless ((MT->config('DisableCleanup') || 0) || ($themeid eq 'mtVicunaSimple')){
+        my $cleanup_insert = $plugin->get_config_value('cleanup_insert',$scope) || 0;
         if ($cleanup_insert) {
             my $rightalign_class = $plugin->get_config_value('rightalign_class',$scope);
             my $centeralign_class = $plugin->get_config_value('centeralign_class',$scope);
             my $leftalign_class = $plugin->get_config_value('leftalign_class',$scope);
             my $wrap;
-            if ($cleanup_insert == '1' || $cleanup_insert == '') {
+            if (($cleanup_insert == 1)||($cleanup_insert == 4)) {
+                $wrap = ($cleanup_insert == 1) ? '<p' : '<div';
                 if ($upload_html =~ / class=\"mt-image-left\"/) {
-                    $wrap = '<p class="'.$leftalign_class.'">';
-                    if ($cleanup_insert == '') {
-                        $wrap = '<p class="img_L">';
-                    }
+                    $wrap .= ' class="'.$leftalign_class.'">';
                 }
                 if ($upload_html =~ / class=\"mt-image-right\"/) {
-                    $wrap = '<p class="'.$rightalign_class.'">';
-                    if ($cleanup_insert == '') {
-                        $wrap = '<p class="img_R">';
-                    }
+                    $wrap .= ' class="'.$rightalign_class.'">';
                 }
                 if ($upload_html =~ / class=\"mt-image-center\"/) {
                     if ($centeralign_class) {
-                        $wrap = '<p class="'.$centeralign_class.'">';
+                        $wrap .= ' class="'.$centeralign_class.'">';
                     } else {
-                        $wrap = '<p>';
-                    }
-                    if ($cleanup_insert == '') {
-                        $wrap = '<p>';
+                        $wrap .= '>';
                     }
                 }
                 $upload_html =~ s/ class=\"mt-image-(none|right|left|center)\"//g;
             }
-            elsif ($cleanup_insert == '2') {
+            if ($cleanup_insert == 2) {
                 $upload_html =~ s/ class=\"mt-image-none\"//i;
                 $rightalign_class = ' class="'.$rightalign_class.'"';
                 $upload_html =~ s/ class=\"mt-image-right\"/$rightalign_class/g;
@@ -469,29 +471,49 @@ sub asset_insert {
                 }
                 $upload_html =~ s/ class=\"mt-image-center\"/$centeralign_class/g;
             }
-            $upload_html =~ s/ style=\"\"//i;
-            $upload_html =~ s/ style=\"float\: (right|left)\; margin\: 0 (0|20px) 20px (0|20px)\;\"//i;
-            $upload_html =~ s/ style=\"text-align\: center\; display\: block\; margin\: 0 auto 20px\;\"//i;
+            if ($cleanup_insert) {
+                $upload_html =~ s/ style=\"\"//i;
+                $upload_html =~ s/ style=\"float\: (right|left)\; margin\: 0 (0|20px) 20px (0|20px)\;\"//i;
+                $upload_html =~ s/ style=\"text-align\: center\; display\: block\; margin\: 0 auto 20px\;\"//i;
+            }
             if ($wrap) {
-                $upload_html = $wrap.$upload_html.'</p>';
+                if ($cleanup_insert == 1) {
+                    $upload_html = $wrap . $upload_html . '</p>';
+                } else {
+                    $upload_html = $wrap . $upload_html . '</div>';
+                }
             }
         }
+    }
+    if ($themeid ne 'mtVicunaSimple') {
         my $insert_class = $app->param('insert_class');
         if ( $app->param('insert_lightbox') ) {
             $insert_class = '<a '.$insert_class;
             $upload_html =~ s/<a/$insert_class/g;
         }
     }
+
     if ($app->param('insert_caption')) {
-        if ($app->param('caption')) {
-            my $alt_caption = ' alt="'.$app->param('caption').'"';
-            $upload_html =~ s/ alt="[^"]+"/$alt_caption/g;
+        my $caption_text = $app->param('caption')||'';
+        unless ($insert_tmpl) {
+            my $alt_caption = ' alt="' . $caption_text . '"';
+            $upload_html =~ s/\salt="[^"]*"/$alt_caption/g;
+        }
+        if ($caption_text) {
+            if ($app->param('sava_as') eq 'label') {
+                $original->label($caption_text);
+                $original->save;
+            } else {
+                $original->description($caption_text);
+                $original->save;
+            }
         }
     }
+
     if ($app->param('without_link')) {
         $upload_html =~ s/^.*(<img [^>]+>).*$/$1/;
     }
-    my $original = $tmpl->context->stash('asset');
+
     my $resize_link = $plugin->get_config_value('resize_link',$scope) || $app->param('resize_link');
     if ($resize_link) {
         my $max_width = $app->param('max_link_width') || $plugin->get_config_value('max_link_width',$scope) || 0;
@@ -539,6 +561,8 @@ sub asset_insert {
             $upload_html =~ s/href=".*?"/href="$thumbnail"/i;
         }
     }
+    my $updated = mt->model('asset')->load($original->id)
+      or return;
 
     if ($insert_tmpl) {
 
@@ -557,9 +581,9 @@ sub asset_insert {
         $param->{caption} = $app->param('insert_caption') ? $app->param('caption') : '';
         $param->{popup} = 1 if $app->param('popup');
 
-        $param->{label} = $original->label;
-        $param->{description} = $original->description;
-        $param->{asset_id} = $original->id;
+        $param->{label} = $updated->label;
+        $param->{description} = $updated->description;
+        $param->{asset_id} = $updated->id;
 
         $param->{a_tag} = $a_tag;
         ($param->{a_href}) = $a_tag =~ /\bhref="(.+?)"/s;
@@ -590,7 +614,7 @@ sub asset_insert {
         $ctx->stash('blog', $blog);
         $ctx->stash('blog_id', $blog->id);
         $ctx->stash('local_blog_id', $blog->id);
-        $ctx->stash('asset', $original);
+        $ctx->stash('asset', $updated);
 
         # Process the user-defined template:
         my $new_html = $insert_tmpl->output;
@@ -632,16 +656,29 @@ sub template_source_assetylene {
     my $insert_tmpl = $app->model('template')->load({
                                                 name => 'Asset Insertion',
                                                 type => 'custom',
-                                                blog_id => [ $blog_id, 0 ]
+                                                blog_id => $blog_id
                                                }) ||
                       $app->model('template')->load({
                                                 identifier => 'asset_insertion',
                                                 type => 'custom',
-                                                blog_id => [ $blog_id, 0 ]
+                                                blog_id => $blog_id
+                                               });
+    my $global_tmpl = $app->model('template')->load({
+                                                name => 'Asset Insertion',
+                                                type => 'custom',
+                                                blog_id => 0
+                                               }) ||
+                      $app->model('template')->load({
+                                                identifier => 'asset_insertion',
+                                                type => 'custom',
+                                                blog_id => 0
                                                });
     if ($insert_tmpl) {
         $src = 'block';
         $insertion = 'none';
+    }
+    if ($global_tmpl) {
+        $src = 'block';
     }
     $$tmpl =~ s/\*assetylene_options\*/$src/sg;
     $$tmpl =~ s/\*module_installed\*/$insertion/sg;

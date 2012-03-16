@@ -78,11 +78,30 @@
   label="<__trans phrase="CleanUp Asset Insert">"
   hint="<__trans phrase="Hint">">
     <select name="cleanup_insert"
+              id="cleanup_insert"
     >
       <option<mt:unless name="cleanup_insert"> selected="selected"</mt:unless> value="0"><__trans phrase="No CleanUp"></option>
+      <option<mt:if name="cleanup_insert" eq="3"> selected="selected"</mt:if> value="3"><__trans phrase="Only remove style"></option>
       <option<mt:if name="cleanup_insert" eq="1"> selected="selected"</mt:if> value="1"><__trans phrase="Add Class for Wrap Paragraph tag"></option>
+      <option<mt:if name="cleanup_insert" eq="4"> selected="selected"</mt:if> value="4"><__trans phrase="Add Class for Wrap Div tag"></option>
       <option<mt:if name="cleanup_insert" eq="2"> selected="selected"</mt:if> value="2"><__trans phrase="Add Class for Image tag"></option>
     </select>
+    <script type="text/javascript">
+    jQuery(document).ready(function(){
+      var selectNo = jQuery('#cleanup_insert').val();
+      if ((selectNo == 0)||(selectNo == 3)) {
+        jQuery('#alignment_class-field').hide();
+      }
+      jQuery('#cleanup_insert').change(function(){
+        selectNo = jQuery('#cleanup_insert').val();
+        if ((selectNo == 0)||(selectNo == 3)) {
+          jQuery('#alignment_class-field').hide();
+        } else {
+          jQuery('#alignment_class-field').show();
+        }
+      });
+    });
+    </script>
 </mtapp:setting>
 
 <mtapp:setting
@@ -91,11 +110,11 @@
   hint='<__trans phrase='Hint'>'
   >
     <div style="float:left;width:6em;"><__trans phrase='RightAlign'></div>
-    <input type="text" name="rightalign_class" name="rightalign_class" value="<mt:var name="rightalign_class">" /><br/>
+    <input type="text" name="rightalign_class" name="rightalign_class" value="<mt:var name="rightalign_class">" style="width:16em;" /><br/>
     <div style="float:left;width:6em;"><__trans phrase='CenterALign'></div>
-    <input type="text" name="centeralign_class" name="centeralign_class" value="<mt:var name="centeralign_class">" /><br/>
+    <input type="text" name="centeralign_class" name="centeralign_class" value="<mt:var name="centeralign_class">" style="width:16em;" /><br/>
     <div style="float:left;width:6em;"><__trans phrase='LeftAlign'></div>
-    <input type="text" name="leftalign_class" name="leftalign_class" value="<mt:var name="leftalign_class">" />
+    <input type="text" name="leftalign_class" name="leftalign_class" value="<mt:var name="leftalign_class">" style="width:16em;" />
 </mtapp:setting>
 
 <mtapp:setting
@@ -144,7 +163,7 @@
   id="resize_link"
   label="<__trans phrase="Limit size of Link Image">"
   hint="<__trans phrase="Hint">">
-    <label for="remove_popup"><__trans phrase='Limited in'></label>
+    <label for="remove_popup"><__trans phrase='Always Limited in'></label>
     <input type="checkbox" name="resize_link" id="resize_link"<mt:if name="resize_link"> checked="checked"</mt:if> value="1" />
     <script type="text/javascript">
     jQuery(document).ready(function(){
@@ -164,8 +183,26 @@
 
 <mtapp:setting
   id="max_link_size"
-  label="<__trans phrase="Max size of Link Image">"
+  label="<__trans phrase="Default Max size of Link Image">"
   hint="<__trans phrase="Hint">">
     <input type="text" style="width:4em;" name="max_link_width" value="<mt:var name="max_link_width">" /> x
     <input type="text" style="width:4em;" name="max_link_height" value="<mt:var name="max_link_height">" />
 </mtapp:setting>
+
+<mtapp:setting
+  id="convert_html"
+  label="<__trans phrase="Output HTML">"
+  hint="<__trans phrase="Hint">">
+    <label for="convert_html"><__trans phrase='Convert to HTML'></label>
+    <input type="checkbox" name="convert_html"<mt:if name="convert_html"> checked="checked"</mt:if> value="1" />
+</mtapp:setting>
+
+
+<div id="module_installed" style="display:*module_installed*;">
+<mtapp:setting
+  id="create_module"
+  label="<__trans phrase="Create Insertion Module in this Blog.">"
+  hint="<__trans phrase="Hint">">
+    <button type="button" name="create_module" value="create_module"><__trans phrase="Create Insertion Module"></button>
+</mtapp:setting>
+</div>

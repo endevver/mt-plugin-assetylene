@@ -50,6 +50,7 @@ use vars qw( %Lexicon );
 	'remove caption' => 'キャプション入力を削除',
 	'remove lightbox' => 'lightbox指定を削除',
 	'remove align' => '配置を削除',
+	'Only remove style' => 'スタイル指定のみ削除',
 );
 
 1;

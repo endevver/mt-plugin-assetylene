@@ -9,7 +9,7 @@ l10n_class: Assetylene::L10N
 blog_config_template: blog_config_assetylene.tmpl
 settings:
   cleanup_insert:
-    default: 1
+    default: 0
     scope: blog
   remove_blank:
     default: 1
