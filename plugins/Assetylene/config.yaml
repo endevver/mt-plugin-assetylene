@@ -140,7 +140,9 @@ settings:
 applications:
   cms:
     callbacks:
-      template_param.asset_options_image: $Assetylene::Assetylene::CMS::asset_options_image
+      template_param.asset_options_image:
+        code: $Assetylene::Assetylene::CMS::asset_options_image
+        priority: 9
       template_param.asset_insert: 
         code: $Assetylene::Assetylene::CMS::asset_insert
         priority: 9

@@ -54,41 +54,74 @@ sub asset_options_image {
         show_hint => 0,
     });
     $opt->innerHTML(<<HTML);
-    <div>
-        <span>
-            <input type="checkbox" id="without_link" name="without_link" value="1" />
-            <label for="without_link"><__trans_section component="Assetylene"><__trans phrase='Insert without Link'></__trans_section></label>
-        </span>
-        <span id ="max_size-select">
-            <input type="$resize_check" id="resize_link" name="resize_link" value="1" />
-            <label><__trans_section component="Assetylene"><__trans phrase='Resize Link'></__trans_section></label>
-        </span>
-    </div>
-    <div id="max_size-input">
+    <span id="without">
+        <input type="checkbox" id="without_link" name="without_link" value="1" />
+        <label for="without_link"><__trans_section component="Assetylene"><__trans phrase='Insert without Link'></__trans_section></label>
+    </span>
+    <span id ="max_size-select">
+        <input type="$resize_check" id="resize_link" name="resize_link" value="1" />
+        <label><__trans_section component="Assetylene"><__trans phrase='Resize Link'></__trans_section></label>
+    </span>
+    <span id="max_size-input">
         <label for="max_link_width"><__trans_section component="Assetylene"><__trans phrase='Max Link Size'></__trans_section></label>
         <input type="text" id="max_link_width" name="max_link_width" value="$max_link_width" style="width:8em;"$readonly_w /> x 
         <input type="text" id="max_link_height" name="max_link_height" value="$max_link_height" style="width:8em;"$readonly_h />
-    </div>
+    </span>
     <script type="text/javascript">
     jQuery(document).ready(function(){
         if (jQuery('#create_thumbnail').attr('checked') == false) {
             jQuery('#max_size-field').hide();
+            if (jQuery('#asset_lightbox-field')) {
+                jQuery('#asset_lightbox-field').hide();
+            }
+            if (jQuery('#insert_lightbox-field')) {
+                jQuery('#insert_lightbox-field').hide();
+            }
+        } else {
+            if (jQuery('#asset_lightbox-field')) {
+                jQuery('#asset_lightbox-field').show();
+            }
+            if (jQuery('#insert_lightbox-field')) {
+                jQuery('#insert_lightbox-field').show();
+            }
         }
         jQuery('#create_thumbnail').click(function() {
             if (jQuery('#create_thumbnail').attr('checked') == true) {
                 jQuery('#max_size-field').show();
+                if (jQuery('#asset_lightbox-field')) {
+                    jQuery('#asset_lightbox-field').show();
+                }
+                if (jQuery('#insert_lightbox-field')) {
+                    jQuery('#insert_lightbox-field').show();
+                }
             } else {
                 jQuery('#max_size-field').hide();
+                if (jQuery('#asset_lightbox-field')) {
+                    jQuery('#asset_lightbox-field').hide();
+                }
+                if (jQuery('#insert_lightbox-field')) {
+                    jQuery('#insert_lightbox-field').hide();
+                }
             }
         });
         jQuery('#max_size-input').$show_input
         jQuery('#without_link').click(function() {
             if (jQuery('#without_link').attr('checked') == true) {
-                jQuery('#asset_lightbox-field').hide();
+                if (jQuery('#asset_lightbox-field')) {
+                    jQuery('#asset_lightbox-field').hide();
+                }
+                if (jQuery('#insert_lightbox-field')) {
+                    jQuery('#insert_lightbox-field').hide();
+                }
                 jQuery('#max_size-select').hide();
                 jQuery('#max_size-input').hide();
             } else {
-                jQuery('#asset_lightbox-field').show();
+                if (jQuery('#asset_lightbox-field')) {
+                    jQuery('#asset_lightbox-field').show();
+                }
+                if (jQuery('#insert_lightbox-field')) {
+                    jQuery('#insert_lightbox-field').show();
+                }
                 jQuery('#max_size-select').show();
                 if (jQuery('#max_size-select').attr('checked') == true) {
                     jQuery('#max_size-input').show();
@@ -98,16 +131,17 @@ sub asset_options_image {
         jQuery('#resize_link').click(function() {
             if (jQuery('#resize_link').attr('checked') == true) {
                 jQuery('#max_size-input').show();
+                jQuery('#without').hide();
+                jQuery('#create_thumbnail').attr('checked', true);
             } else {
                 jQuery('#max_size-input').hide();
+                jQuery('#without').show();
             }
         });
     });
     </script>
 HTML
     $tmpl->insertBefore($opt, $el);
-
-
 #< Max Original Size
 # lightbox >
     $opt = $tmpl->createElement('app:setting', {
@@ -117,8 +151,9 @@ HTML
         hint => '',
         show_hint => 0,
     });
+    my $vicuna = MT->component( 'mtVicunaSimple' );
     my $themeid = $blog->theme_id;
-    if ($themeid ne 'mtVicunaSimple') {
+    if ((!$vicuna) || ($themeid ne 'mtVicunaSimple')) {
         my $lb_select1 = $plugin->get_config_value('lb_select1',$scope);
         my $lb_select2 = $plugin->get_config_value('lb_select2',$scope);
         my $lb_select3 = $plugin->get_config_value('lb_select3',$scope);
@@ -147,10 +182,11 @@ HTML
             $opt->innerHTML(<<HTML);
         <div>
             <input type="checkbox" id="insert_lightbox" name="insert_lightbox"
-                onclick="if(this.checked){document.getElementById('create_thumbnail').checked=true;
-                  document.getElementById('thumb_width').focus();
+                onclick="if(this.checked){
+                  jQuery('#create_thumbnail').attr('checked', true);
+                  jQuery('#without').hide();
                 }else{
-                  document.getElementById('create_thumbnail').checked=false;
+                  jQuery('#without').show();
                 }"
                 value="1"<mt:if name="make_thumb"> checked="checked" </mt:if> />
             <label for="insert_lightbox"><__trans_section component="Assetylene"><__trans phrase='Use Lightbox Effect'></__trans_section></label>
@@ -652,7 +688,12 @@ sub template_source_assetylene {
     my ( $cb, $app, $tmpl ) = @_;
     my $src = 'none';
     my $insertion = 'block';
-    my $blog_id = $app->param('blog_id');
+    my $lightbox_disp;
+    my $blog_id = $app->param('blog_id')
+      or return;
+    my $blog = $app->blog
+      or return;
+    return unless ($blog_id == $blog->id);
     my $insert_tmpl = $app->model('template')->load({
                                                 name => 'Asset Insertion',
                                                 type => 'custom',
@@ -680,12 +721,20 @@ sub template_source_assetylene {
     if ($global_tmpl) {
         $src = 'block';
     }
+
     my $install_url = '?__mode=install_blog_templates&amp;blog_id=' . $blog_id;
     $install_url .= '&amp;magic_token=' . $app->current_magic;
-    
+
+    if ((!MT->component( 'mtVicunaSimple' )) || ($blog->theme_id ne 'mtVicunaSimple')) {
+        $lightbox_disp = 'block;';
+    } else {
+        $lightbox_disp = 'none;';
+    }
+        
     $$tmpl =~ s/\*assetylene_options\*/$src/sg;
     $$tmpl =~ s/\*module_installed\*/$insertion/sg;
     $$tmpl =~ s/\*module_install_url\*/$install_url/sg;
+    $$tmpl =~ s/\*lightbox\*/$lightbox_disp/sg;
 
 }
 
@@ -738,7 +787,7 @@ sub install_blog_templates {
 }
 
 sub install_global_templates {
-    $app->redirect( "$cgi?__mode=list_template&blog_id=0" );
+    #$app->redirect( "$cgi?__mode=list_template&blog_id=0" );
 }
 
 sub is_user_can {
