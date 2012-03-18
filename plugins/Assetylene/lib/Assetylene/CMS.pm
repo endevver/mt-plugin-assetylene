@@ -396,8 +396,26 @@ HTML
     require MT::Util;
     # Encode any special characters as HTML entities, since this
     # description is being placed in an HTML textarea:
-    my $caption_safe = MT::Util::encode_html( $asset->description )
-                    || MT::Util::encode_html( $asset->label );
+    my $caption_safe;
+    my $asset_description;
+    my $asset_label;
+    my $selectd_label;
+    my $selected_description;
+    if ( $asset->description ) {
+        unless ($asset->description =~ /[\r\n]/) {
+            $asset_description = MT::Util::encode_html( $asset->description );
+            $caption_safe = $asset_description;
+            $selected_description = ' selected="selected"';
+            $selectd_label = '';
+        }
+    }
+    $asset_label = MT::Util::encode_html( $asset->label );
+    unless ($caption_safe) {
+        $caption_safe = $asset_label;
+        $selected_description = '';
+        $selectd_label = ' selected="selected"';
+    }
+
 
     if ($insert_tmpl) {
         $opt->innerHTML(<<HTML);
@@ -417,11 +435,12 @@ HTML
     <input type="checkbox" id="insert_caption" name="insert_caption" value="1" />
     <label for="insert_caption"><__trans_section component="Assetylene"><__trans phrase='Set alt attribute in image?'></__trans_section></label>
     <input type="text" name="caption" onfocus="getByID('insert_caption').checked=true; return false;"
-        value="$caption_safe" style="width:16em;" />&nbsp;<__trans_section component="Assetylene"><__trans phrase='and Save as'></__trans_section>
+        value="$caption_safe" style="width:16em;" />&nbsp;
+    <input type="checkbox" id="caption_save_as" name="caption_save_as" value="1" />
+    <__trans_section component="Assetylene"><__trans phrase='and Save as'></__trans_section>
     <select name="sava_as">
-        <option value=""><__trans phrase='None'></option>
-        <option value="label"><__trans phrase='Label'></option>
-        <option value="description"><__trans phrase='Description'></option>
+        <option value="label"$selectd_label><__trans phrase='Label'></option>
+        <option value="description"$selected_description><__trans phrase='Description'></option>
     </select>
 </div>
 HTML
@@ -529,23 +548,24 @@ sub asset_insert {
         }
     }
 
+    my $caption_text = $app->param('caption')||'';
     if ($app->param('insert_caption')) {
-        my $caption_text = $app->param('caption')||'';
         unless ($insert_tmpl) {
             my $alt_caption = ' alt="' . $caption_text . '"';
             $upload_html =~ s/\salt="[^"]*"/$alt_caption/g;
         }
-        if ($caption_text) {
-            if ($app->param('sava_as') eq 'label') {
+    }
+    if ($app->param('caption_save_as')) {
+        if ($app->param('sava_as') eq 'label') {
+            if ($caption_text) {
                 $original->label($caption_text);
                 $original->save;
-            } else {
-                $original->description($caption_text);
-                $original->save;
             }
+        } elsif ($app->param('sava_as') eq 'description') {
+            $original->description($caption_text);
+            $original->save;
         }
     }
-
     if ($app->param('without_link')) {
         $upload_html =~ s/^.*(<img [^>]+>).*$/$1/;
     }

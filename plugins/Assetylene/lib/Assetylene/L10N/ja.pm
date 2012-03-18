@@ -57,6 +57,9 @@ use vars qw( %Lexicon );
 	'Add Class for Wrap Div tag' => 'diivタグで囲み、クラスを追加する',
 	'Create Insertion Module in this Blog.' => 'このブログに挿入用モジュールを作成する',
 	'Create Insertion Module' => 'モジュールを作成',
+	'Set alt attribute in image?' => '画像にalt属性を設定する',
+	'and Save as' => '値を保存する',
+	
 );
 
 1;
