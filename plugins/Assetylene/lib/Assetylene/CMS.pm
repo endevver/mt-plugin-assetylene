@@ -668,6 +668,11 @@ sub asset_insert {
             $new_html =~ s/\s*\n+/\n/g;
         }
 
+        my $convert_html = $plugin->get_config_value('convert_html',$scope);
+        if ($convert_html) {
+            $new_html =~ s/ \/>/\>/ig;
+        }
+
         if (defined($new_html)) {
             # Replace the MT generated asset markup with the user-defined
             # markup:
@@ -680,6 +685,10 @@ sub asset_insert {
         }
     }
     else {
+        my $convert_html = $plugin->get_config_value('convert_html',$scope);
+        if ($convert_html) {
+            $upload_html =~ s/ \/>/\>/ig;
+        }
         $param->{upload_html} = $upload_html;
     }
 }

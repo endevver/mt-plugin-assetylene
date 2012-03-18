@@ -137,6 +137,9 @@ settings:
   remove_align5:
     default: 0
     scope: blog
+  convert_html:
+    default: 0
+    scope: blog
 applications:
   cms:
     callbacks:
