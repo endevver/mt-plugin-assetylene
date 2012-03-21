@@ -445,6 +445,33 @@ HTML
     }
     $tmpl->insertBefore($opt, $el);
 #< Caption
+# Asset Thumbnail >
+    my $show_thumbnail = $plugin->get_config_value('show_thumbnail',$scope) || 0;
+    if ($show_thumbnail) {
+        my %param;
+        $param{Width} = 150;
+        my ( $thumbnail, $w, $h ) = $asset->thumbnail_file( %param );
+        (my $site_path = $blog->site_path) =~ s!\\!/!g;
+        (my $site_url  = $blog->site_url) =~ s!https?://[^/]+/!/!;
+        my $regex_path = quotemeta( $site_path );
+        $thumbnail =~ s!\\!/!g;
+        $thumbnail =~ s/^$regex_path/$site_url/;
+        $thumbnail =~ s!//!/!g;
+        $opt = $tmpl->createElement('app:setting', {
+            id => 'asset_thumbnail',
+            label => MT->translate('Asset Thumbnail'),
+            label_class => 'no-header',
+            hint => '',
+            show_hint => 0,
+        });
+        $opt->innerHTML(<<HTML);
+<div>
+        <img src="$thumbnail" width="$w" height="$h" style="border: 1px solid #ccc; padding: 5px; background-color: #fff;" />
+</div>
+HTML
+        $tmpl->insertBefore($opt, $el);
+    }
+#< Asset Thumbnail
 # Remove Popup >
     my $remove_popup = $plugin->get_config_value('remove_popup',$scope);
     if ($remove_popup) {

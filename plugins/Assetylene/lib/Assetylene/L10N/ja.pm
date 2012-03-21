@@ -59,7 +59,8 @@ use vars qw( %Lexicon );
 	'Create Insertion Module' => 'モジュールを作成',
 	'Set alt attribute in image?' => '画像にalt属性を設定する',
 	'and Save as' => '値を保存する',
-	
+	'Show Thumbnail' => 'サムネイルを表示',
+	'Show Asset Thumbnail' => 'アイテムのサムネイルを表示する',
 );
 
 1;

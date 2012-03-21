@@ -140,6 +140,9 @@ settings:
   convert_html:
     default: 0
     scope: blog
+  show_thumbnail:
+    default: 0
+    scope: blog
 applications:
   cms:
     callbacks:
