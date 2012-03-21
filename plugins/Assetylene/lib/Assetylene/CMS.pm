@@ -415,8 +415,6 @@ HTML
         $selected_description = '';
         $selectd_label = ' selected="selected"';
     }
-
-
     if ($insert_tmpl) {
         $opt->innerHTML(<<HTML);
 <div class="field">
@@ -448,7 +446,7 @@ HTML
     $tmpl->insertBefore($opt, $el);
 #< Caption
 # Remove Popup >
-    my $remove_popup = $plugin->get_config_value('remove_popup',$scope) || 1;
+    my $remove_popup = $plugin->get_config_value('remove_popup',$scope);
     if ($remove_popup) {
         my $popup_element = $tmpl->getElementById('link_to_popup');
         my $class_attr = $popup_element->getAttribute('class') || '';
