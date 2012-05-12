@@ -1,11 +1,167 @@
 name: Assetylene
-description: Provides a new "Caption" field when inserting an asset into a post, and the ability to customize the HTML markup produced for publishing MT assets.
-version: 1.02
-author_name: Six Apart Ltd.
-author_link: http://www.sixapart.com/
-
+description: <__trans phrase='Provides a new "Caption" field when inserting an asset into a post, and the ability to customize the HTML markup produced for publishing MT assets.'>
+version: 1.13
+author_name: naoaki.onozaki
+author_link: http://www.zelazny.mydns.jp/
+plugin_link: http://github.com/naoaki011/mt-plugin-assetylene/
+doc_link: https://github.com/naoaki011/mt-plugin-assetylene/wiki
+l10n_class: Assetylene::L10N
+blog_config_template: blog_config_assetylene.tmpl
+settings:
+  cleanup_insert:
+    default: 0
+    scope: blog
+  remove_blank:
+    default: 1
+    scope: blog
+  rightalign_class:
+    default: img_R
+    scope: blog
+  centeralign_class:
+    default: ''
+    scope: blog
+  leftalign_class:
+    default: img_L
+    scope: blog
+  lb_select1:
+    default: 1
+    scope: blog
+  lightbox_selector1:
+    default: 'rel="lightbox"'
+    scope: blog
+  lb_select2:
+    default: 0
+    scope: blog
+  lightbox_selector2:
+    default: 'class="highslide"'
+    scope: blog
+  lb_select3:
+    default: 0
+    scope: blog
+  lightbox_selector3:
+    default: ''
+    scope: blog
+  lb_select4:
+    default: 0
+    scope: blog
+  lightbox_selector4:
+    default: ''
+    scope: blog
+  pattern1:
+    default: MT Default
+    scope: blog
+  pattern2:
+    default: Caption as alt text
+    scope: blog
+  pattern3:
+    default: ''
+    scope: blog
+  pattern4:
+    default: ''
+    scope: blog
+  pattern5:
+    default: ''
+    scope: blog
+  remove_popup:
+    default: 0
+    scope: blog
+  resize_link:
+    default: 0
+    scope: blog
+  max_link_width:
+    default: 900
+    scope: blog
+  max_link_height:
+    default: ''
+    scope: blog
+  default_pattern:
+    default: 1
+    scope: blog
+  remove_width1:
+    default: 0
+    scope: blog
+  remove_width2:
+    default: 0
+    scope: blog
+  remove_width3:
+    default: 0
+    scope: blog
+  remove_width4:
+    default: 0
+    scope: blog
+  remove_width5:
+    default: 0
+    scope: blog
+  remove_caption1:
+    default: 0
+    scope: blog
+  remove_caption2:
+    default: 0
+    scope: blog
+  remove_caption3:
+    default: 0
+    scope: blog
+  remove_caption4:
+    default: 0
+    scope: blog
+  remove_caption5:
+    default: 0
+    scope: blog
+  remove_lightbox1:
+    default: 0
+    scope: blog
+  remove_lightbox2:
+    default: 0
+    scope: blog
+  remove_lightbox3:
+    default: 0
+    scope: blog
+  remove_lightbox4:
+    default: 0
+    scope: blog
+  remove_lightbox5:
+    default: 0
+    scope: blog
+  remove_align1:
+    default: 0
+    scope: blog
+  remove_align2:
+    default: 0
+    scope: blog
+  remove_align3:
+    default: 0
+    scope: blog
+  remove_align4:
+    default: 0
+    scope: blog
+  remove_align5:
+    default: 0
+    scope: blog
+  convert_html:
+    default: 0
+    scope: blog
+  show_thumbnail:
+    default: 0
+    scope: blog
 applications:
-    cms:
-        callbacks:
-            template_param.asset_options_image: $Assetylene::Assetylene::CMS::asset_options_image
-            template_param.asset_insert: $Assetylene::Assetylene::CMS::asset_insert
+  cms:
+    callbacks:
+      template_param.asset_options_image:
+        code: $Assetylene::Assetylene::CMS::asset_options_image
+        priority: 9
+      template_param.asset_insert: 
+        code: $Assetylene::Assetylene::CMS::asset_insert
+        priority: 9
+      MT::App::CMS::template_source.blog_config_assetylene: $Assetylene::Assetylene::CMS::template_source_assetylene
+    methods:
+      install_blog_templates:   $Assetylene::Assetylene::CMS::install_blog_templates
+      #install_global_templates: $Assetylene::Assetylene::CMS::install_global_templates
+templets:
+  Assetylene:
+    base_path: template
+    label: AssetInsertion for Assetylene
+    order: 99
+    templates:
+      module:
+        asset_insertion:
+          label: Asset Insertion

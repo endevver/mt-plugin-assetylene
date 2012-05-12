@@ -1,0 +1,222 @@
+<section id="asset_variables" style="display:*assetylene_options*; background-color:#eee; border-radius:0.5em;">
+<legend style="font-size: 120%; padding: 1em;"><__trans phrase='Prefs of Asset Insertion module.'></legend>
+<mtapp:setting
+  id='insertion_pattern'
+  label='<__trans phrase="Insertion Pattern">'
+  hint='<__trans phrase='Hint'>'
+  >
+    <table style="float:left; width:auto;">
+     <tr>
+      <th style="width:6em;"><__trans phrase="Default"></th>
+      <th style="text-align:left; width:24em;"><__trans phrase="Name"></th>
+      <th style="width:12em;"><__trans phrase="remove width"></th>
+      <th style="width:12em;"><__trans phrase="remove caption"></th>
+      <th style="width:12em;"><__trans phrase="remove lightbox"></th>
+      <th style="width:12em;"><__trans phrase="remove align"></th>
+     </tr>
+     <tr>
+      <th><input type="checkbox" id="default_check1" name="default_pattern"<mt:unless name="default_pattern" ge="2"> checked="checked"</mt:unless> value="1" />&nbsp;1</th>
+      <td><input type="text" name="pattern1" name="pattern1" value="<mt:var name="pattern1" escape="html">" style="width:100%" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_width1"<mt:if name="remove_width1"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_caption1"<mt:if name="remove_caption1"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_lightbox1"<mt:if name="remove_lightbox1"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_align1"<mt:if name="remove_align1"> checked="checked"</mt:if> value="1" /></td>
+     </tr>
+     <tr>
+      <th><input type="checkbox" id="default_check2" name="default_pattern"<mt:if name="default_pattern" eq="2"> checked="checked"</mt:if> value="2" />&nbsp;2</th>
+      <td><input type="text" name="pattern2" name="pattern2" value="<mt:var name="pattern2" escape="html">"  style="width:100%" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_width2"<mt:if name="remove_width2"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_caption2"<mt:if name="remove_caption2"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_lightbox2"<mt:if name="remove_lightbox2"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_align2"<mt:if name="remove_align2"> checked="checked"</mt:if> value="1" /></td>
+     </tr>
+     <tr>
+      <th ><input type="checkbox" id="default_check3" name="default_pattern"<mt:if name="default_pattern" eq="3"> checked="checked"</mt:if> value="3" />&nbsp;3</th>
+      <td><input type="text" name="pattern3" name="pattern3" value="<mt:var name="pattern3" escape="html">"  style="width:100%" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_width3"<mt:if name="remove_width3"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_caption3"<mt:if name="remove_caption3"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_lightbox3"<mt:if name="remove_lightbox3"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_align3"<mt:if name="remove_align3"> checked="checked"</mt:if> value="1" /></td>
+     </tr>
+     <tr>
+      <th><input type="checkbox" id="default_check4" name="default_pattern"<mt:if name="default_pattern" eq="4"> checked="checked"</mt:if> value="4" />&nbsp;4</th>
+      <td><input type="text" name="pattern4" name="pattern4" value="<mt:var name="pattern4" escape="html">"  style="width:100%" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_width4"<mt:if name="remove_width4"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_caption4"<mt:if name="remove_caption4"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_lightbox4"<mt:if name="remove_lightbox4"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_align4"<mt:if name="remove_align4"> checked="checked"</mt:if> value="1" /></td>
+     </tr>
+     <tr>
+      <th><input type="checkbox" id="default_check5" name="default_pattern"<mt:if name="default_pattern" eq="5"> checked="checked"</mt:if> value="5" />&nbsp;5</th>
+      <td><input type="text" name="pattern5" name="pattern5" value="<mt:var name="pattern5" escape="html">"  style="width:100%" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_width5"<mt:if name="remove_width5"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_caption5"<mt:if name="remove_caption5"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_lightbox5"<mt:if name="remove_lightbox5"> checked="checked"</mt:if> value="1" /></td>
+      <td style="text-align:center;"><input type="checkbox" name="remove_align5"<mt:if name="remove_align5"> checked="checked"</mt:if> value="1" /></td>
+     </tr>
+    </table>
+    <script type="text/javascript">
+      jQuery("input[name='default_pattern']").click(function() {
+        jQuery("input[name='default_pattern']").attr( { checked: "" } );
+        jQuery(this).attr( { checked: "checked" } );
+      });
+    </script>
+</mtapp:setting>
+<mtapp:setting
+  id="remove_blank"
+  label="<__trans phrase="Remove Blank">"
+  hint="<__trans phrase="Hint">">
+    <label for="remove_blank"><__trans phrase='Remove'></label>
+    <input type="radio" name="remove_blank"<mt:if name="remove_blank" eq="1"> checked="checked"</mt:if> value="1" />
+    <label for="remove_blank"><__trans phrase='Pass'></label>
+    <input type="radio" name="remove_blank"<mt:unless name="remove_blank"> checked="checked"</mt:unless> value="0" />
+</mtapp:setting>
+</section>
+
+<mtapp:setting
+  id="cleanup_insert"
+  label="<__trans phrase="CleanUp Asset Insert">"
+  hint="<__trans phrase="Hint">">
+    <select name="cleanup_insert"
+              id="cleanup_insert"
+    >
+      <option<mt:unless name="cleanup_insert"> selected="selected"</mt:unless> value="0"><__trans phrase="No CleanUp"></option>
+      <option<mt:if name="cleanup_insert" eq="3"> selected="selected"</mt:if> value="3"><__trans phrase="Only remove style"></option>
+      <option<mt:if name="cleanup_insert" eq="1"> selected="selected"</mt:if> value="1"><__trans phrase="Add Class for Wrap Paragraph tag"></option>
+      <option<mt:if name="cleanup_insert" eq="4"> selected="selected"</mt:if> value="4"><__trans phrase="Add Class for Wrap Div tag"></option>
+      <option<mt:if name="cleanup_insert" eq="2"> selected="selected"</mt:if> value="2"><__trans phrase="Add Class for Image tag"></option>
+    </select>
+    <script type="text/javascript">
+    jQuery(document).ready(function(){
+      var selectNo = jQuery('#cleanup_insert').val();
+      if ((selectNo == 0)||(selectNo == 3)) {
+        jQuery('#alignment_class-field').hide();
+      }
+      jQuery('#cleanup_insert').change(function(){
+        selectNo = jQuery('#cleanup_insert').val();
+        if ((selectNo == 0)||(selectNo == 3)) {
+          jQuery('#alignment_class-field').hide();
+        } else {
+          jQuery('#alignment_class-field').show();
+        }
+      });
+    });
+    </script>
+</mtapp:setting>
+
+<mtapp:setting
+  id='alignment_class'
+  label='<__trans phrase='Alignment Class'>'
+  hint='<__trans phrase='Hint'>'
+  >
+    <div style="float:left;width:6em;"><__trans phrase='RightAlign'></div>
+    <input type="text" name="rightalign_class" name="rightalign_class" value="<mt:var name="rightalign_class">" style="width:16em;" /><br/>
+    <div style="float:left;width:6em;"><__trans phrase='CenterALign'></div>
+    <input type="text" name="centeralign_class" name="centeralign_class" value="<mt:var name="centeralign_class">" style="width:16em;" /><br/>
+    <div style="float:left;width:6em;"><__trans phrase='LeftAlign'></div>
+    <input type="text" name="leftalign_class" name="leftalign_class" value="<mt:var name="leftalign_class">" style="width:16em;" />
+</mtapp:setting>
+
+<div style="display:*lightbox*">
+<mtapp:setting
+  id='lightbox_selector'
+  label='<__trans phrase='Lightbox Selector'>'
+  hint='<__trans phrase='Hint'>'
+  >
+    <label for="lb_select1"><__trans phrase='Use'></label>
+    (&nbsp;<input type="radio" name="lb_select1" id="lb_select1"<mt:if name="lb_select1" eq="1"> checked="checked"</mt:if> value="1" />
+    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
+    <input type="radio" name="lb_select1" id="lb_select1"<mt:unless name="lb_select1"> checked="checked"</mt:unless> value="0" />
+    <label><__trans phrase='No'></label>&nbsp;)
+    <input type="text" name="lightbox_selector1" name="lightbox_selector1" value="<mt:var name="lightbox_selector1" escape="html">" /><br/>
+
+    <label for="lb_select2"><__trans phrase='Use'></label>
+    (&nbsp;<input type="radio" name="lb_select2" id="lb_select2"<mt:if name="lb_select2" eq="1"> checked="checked"</mt:if> value="1" />
+    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
+    <input type="radio" name="lb_select2" id="lb_select2"<mt:unless name="lb_select2"> checked="checked"</mt:unless> value="0" />
+    <label><__trans phrase='No'></label>&nbsp;)
+    <input type="text" name="lightbox_selector2" name="lightbox_selector2" value="<mt:var name="lightbox_selector2" escape="html">" /><br/>
+
+    <label for="lb_select3"><__trans phrase='Use'></label>
+    (&nbsp;<input type="radio" name="lb_select3" id="lb_select3"<mt:if name="lb_select3" eq="1"> checked="checked"</mt:if> value="1" />
+    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
+    <input type="radio" name="lb_select3" id="lb_select3"<mt:unless name="lb_select3"> checked="checked"</mt:unless> value="0" />
+    <label><__trans phrase='No'></label>&nbsp;)
+    <input type="text" name="lightbox_selector3" name="lightbox_selector3" value="<mt:var name="lightbox_selector3" escape="html">" /><br/>
+
+    <label for="lb_select4"><__trans phrase='Use'></label>
+    (&nbsp;<input type="radio" name="lb_select4" id="lb_select4"<mt:if name="lb_select4" eq="1"> checked="checked"</mt:if> value="1" />
+    <label><__trans phrase='Yes'></label>&nbsp;/&nbsp;
+    <input type="radio" name="lb_select4" id="lb_select4"<mt:unless name="lb_select4"> checked="checked"</mt:unless> value="0" />
+    <label><__trans phrase='No'></label>&nbsp;)
+    <input type="text" name="lightbox_selector4" name="lightbox_selector3" value="<mt:var name="lightbox_selector4" escape="html">" /><br/>
+</mtapp:setting>
+</div>
+
+<mtapp:setting
+  id="remove_popup"
+  label="<__trans phrase="Remove Popup Insert">"
+  hint="<__trans phrase="Hint">">
+    <label for="remove_popup"><__trans phrase='Remove'></label>
+    <input type="checkbox" name="remove_popup"<mt:if name="remove_popup"> checked="checked"</mt:if> value="1" />
+</mtapp:setting>
+
+<mtapp:setting
+  id="resize_link"
+  label="<__trans phrase="Limit size of Link Image">"
+  hint="<__trans phrase="Hint">">
+    <label for="remove_popup"><__trans phrase='Always Limited in'></label>
+    <input type="checkbox" name="resize_link" id="resize_link"<mt:if name="resize_link"> checked="checked"</mt:if> value="1" />
+    <script type="text/javascript">
+    jQuery(document).ready(function(){
+      if(jQuery('input#resize_link').attr('checked') == false) {
+        jQuery('#max_link_size-field').hide();
+      }
+      jQuery('input#resize_link').click(function() {
+        if(jQuery('input#resize_link').attr('checked') == true) {
+          jQuery('#max_link_size-field').show();
+        } else {
+          jQuery('#max_link_size-field').hide();
+        }
+      });
+    });
+    </script>
+</mtapp:setting>
+
+<mtapp:setting
+  id="max_link_size"
+  label="<__trans phrase="Default Max size of Link Image">"
+  hint="<__trans phrase="Hint">">
+    <input type="text" style="width:4em;" name="max_link_width" value="<mt:var name="max_link_width">" /> x
+    <input type="text" style="width:4em;" name="max_link_height" value="<mt:var name="max_link_height">" />
+</mtapp:setting>
+
+<mtapp:setting
+  id="convert_html"
+  label="<__trans phrase="Output HTML">"
+  hint="<__trans phrase="Hint">">
+    <label for="convert_html"><__trans phrase='Convert to HTML'></label>
+    <input type="checkbox" name="convert_html"<mt:if name="convert_html"> checked="checked"</mt:if> value="1" />
+</mtapp:setting>
+
+<mtapp:setting
+  id="convert_html"
+  label="<__trans phrase="Show Thumbnail">"
+  hint="<__trans phrase="Hint">">
+    <label for="show_thumbnail"><__trans phrase='Show Asset Thumbnail'></label>
+    <input type="checkbox" name="show_thumbnail"<mt:if name="show_thumbnail"> checked="checked"</mt:if> value="1" />
+</mtapp:setting>
+
+<div id="module_installed" style="display:*module_installed*;">
+<mtapp:setting
+  id="create_module"
+  label="<__trans phrase="Create Insertion Module in this Blog.">"
+  hint="<__trans phrase="Hint">">
+    <button type="button" type="submit" accesskey="s"
+        class="save action primary button"
+        onclick="location.href='*module_install_url*'; return false;"
+    >
+           <__trans phrase="Create Insertion Module">
+    </button>
+</mtapp:setting>
+</div>
