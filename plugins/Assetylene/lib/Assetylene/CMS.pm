@@ -6,6 +6,7 @@
 package Assetylene::CMS;
 
 use strict;
+use warnings;
 
 sub asset_options_image {
     my ($cb, $app, $param, $tmpl) = @_;
@@ -23,11 +24,9 @@ sub asset_options_image {
         or return;
 
     my $opt = $tmpl->createElement('app:setting', {
-        id => 'image_caption',
-        label => MT->translate('Caption'),
+        id          => 'image_caption',
+        label       => MT->translate('Caption'),
         label_class => 'no-header',
-        hint => '',
-        show_hint => 0,
     });
 
     require MT::Util;
@@ -37,13 +36,19 @@ sub asset_options_image {
 
     # Contents of the app:setting tag:
     $opt->innerHTML(<<HTML);
-    <input type="checkbox" id="insert_caption" name="insert_caption"
+    <input type="checkbox"
+        id="insert_caption"
+        name="insert_caption"
         value="1" />
     <label for="insert_caption">Insert a caption?</label>
-    <div class="textarea-wrapper"><textarea name="caption" style="height: 36px;" rows="2" cols=""
-        onfocus="getByID('insert_caption').checked=true; return false;"
-        class="full-width">$caption_safe</textarea></div>
+    <div class="textarea-wrapper" style="margin-top: 3px;">
+        <textarea name="caption"
+            style="height: <mt:If tag="Version" lt="5">36<mt:Else>42</mt:If>px;"
+            onfocus="getByID('insert_caption').checked=true; return false;"
+            class="text full full-width">$caption_safe</textarea>
+    </div>
 HTML
+
     # Insert new field above the 'image_alignment' field:
     $tmpl->insertBefore($opt, $el);
     # Force the tokens of the template to be reprocessed now that
