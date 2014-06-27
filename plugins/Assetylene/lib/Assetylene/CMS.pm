@@ -59,6 +59,10 @@ HTML
 sub asset_insert {
     my ($cb, $app, $param, $tmpl) = @_;
 
+    # Skip over any asset custom fields. We always want those to be simple HTML
+    # so that the ...Asset block tag can parse the field correctly.
+    return if $app->param('edit_field') =~ /customfield/;
+
     my $blog = $app->blog;
 
     # Assertions:
