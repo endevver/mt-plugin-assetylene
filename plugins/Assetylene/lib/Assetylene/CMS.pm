@@ -1,137 +1,229 @@
-# This program is distributed under the terms of the
-# GNU General Public License, version 2.
-#
-# $Id: CMS.pm 1534 2009-05-24 23:52:58Z breese $
-
 package Assetylene::CMS;
 
 use strict;
 use warnings;
 
-sub asset_options_image {
-    my ($cb, $app, $param, $tmpl) = @_;
+use MT::Util qw{ encode_html };
 
-    # Assertions:
-    # 'asset_id' template parameter must be present.
-    my $asset_id = $param->{asset_id} or return;
+# template_source.multi_asset_options callback, for MT6.2+.
+# Insert the caption checkbox and textarea field.
+sub xfrm_src_multi_asset_options {
+    my ($cb, $app, $tmpl) = @_;
 
-    # Asset object must be loadable
-    my $asset = MT::Asset->load( $asset_id ) or return;
-
-    # The 'image_alignment' MT template node must be in
-    # the template we're working with to add our field above it.
-    my $el = $tmpl->getElementById('image_alignment')
-        or return;
-
-    my $opt = $tmpl->createElement('app:setting', {
-        id          => 'image_caption',
-        label       => MT->translate('Caption'),
-        label_class => 'no-header',
-    });
-
-    require MT::Util;
-    # Encode any special characters as HTML entities, since this
-    # description is being placed in an HTML textarea:
-    my $caption_safe = MT::Util::encode_html( $asset->description );
-
-    # Contents of the app:setting tag:
-    $opt->innerHTML(<<HTML);
+    # Add the caption fields.
+    my $html = <<HTML;
     <input type="checkbox"
-        id="insert_caption"
-        name="insert_caption"
+        id="insert_caption-<mt:Var name="id">"
+        name="insert_caption-<mt:Var name="id">"
         value="1" />
-    <label for="insert_caption">Insert a caption?</label>
+    <label for="insert_caption-<mt:Var name="id">">Insert a caption?</label>
     <div class="textarea-wrapper" style="margin-top: 3px;">
-        <textarea name="caption"
-            style="height: <mt:If tag="Version" lt="5">36<mt:Else>42</mt:If>px;"
-            onfocus="getByID('insert_caption').checked=true; return false;"
-            class="text full full-width">$caption_safe</textarea>
+        <textarea name="caption-<mt:Var name="id">"
+            style="height: 42px;"
+            onfocus="getByID('insert_caption-<mt:Var name="id">').checked=true; return false;"
+            class="text full full-width"><mt:Var name="caption"></textarea>
     </div>
 HTML
 
-    # Insert new field above the 'image_alignment' field:
-    $tmpl->insertBefore($opt, $el);
-    # Force the tokens of the template to be reprocessed now that
-    # we've manipulated it:
-    $tmpl->rescan();
+    $$tmpl =~ s/(<mt:var name="options">)/$1$html/;
+
+    # Instead of using MT::CMS::Asset::insert_asset, use our own.
+    my $old = q{<input type="hidden" name="__mode" value="insert_asset" />};
+    my $new = q{<input type="hidden" name="__mode" value="assetylene_insert_asset" />};
+    $$tmpl =~ s/$old/$new/;
+
+    # When building the json object with each asset's data, we also need to
+    # parse the textarea field for the caption.
+    my $old = q{jQuery(this).find('input').};
+    my $new = q{jQuery(this).find('input,textarea').};
+    $$tmpl =~ s/$old/$new/;
 }
 
-sub asset_insert {
+# template_param.multi_asset_options callback, for MT 6.2+.
+# Populate the textarea field.
+sub xfrm_param_multi_asset_options {
     my ($cb, $app, $param, $tmpl) = @_;
 
-    # Skip over any asset custom fields. We always want those to be simple HTML
-    # so that the ...Asset block tag can parse the field correctly.
-    return if $app->param('edit_field') =~ /customfield/;
+    my $i = 0;
+    while ( $param->{options_loop}[$i] ) {
+        next unless $param->{options_loop}[$i];
 
-    my $blog = $app->blog;
+        # Get the asset.
+        my $asset_id = $param->{options_loop}[$i]->{id};
+        my $asset = $app->model('asset')->load( $asset_id );
 
-    # Assertions:
-    # Load the user-defined "Asset Insertion" template module.
-    # Currently, this template must be named in English. Look both
-    # at the blog and system level for this template.
-    my $insert_tmpl = $app->model('template')->load({
-        name => 'Asset Insertion', type => 'custom',
-        blog_id => [ $blog->id, 0 ] });
-    return unless $insert_tmpl;
+        # Encode any special characters as HTML entities, since this
+        # description is being placed in an HTML textarea:
+        my $caption = encode_html( $asset->description );
 
-    my $asset = $tmpl->context->stash('asset');
+        # Insert the caption into the param field.
+        $param->{options_loop}[$i]->{caption} = $caption;
 
-    # Collect all the elements of the MT generated asset markup
-    # so they can be manipulated indepdendently by the user-defined
-    # template:
-    my $html = $param->{upload_html};
-    my ($img_tag) = $html =~ /(<img\b[^>]+?>)/s;
-    my ($a_tag) = $html =~ /(<a\b[^>]+?>)/s;
-    my ($form_tag) = $html =~ /(<form[^>]+?>)/s;
+        # Increment to get the next item in the options_loop array.
+        $i++;
+    }
+}
 
-    $param->{enclose} = 1 if $form_tag;
-    $param->{include} = 1 if $app->param('include');
-    $param->{thumb} = 1 if $app->param('thumb');
-    ($param->{align}) = $app->param('align') =~ m/(\w+)/;
-    $param->{caption} = $app->param('insert_caption') ? $app->param('caption') : '';
-    $param->{popup} = 1 if $app->param('popup');
+# Above in xfrm_src_multi_asset_options, the default __mode `insert_asset` (on
+# the multi asset options screen) is replaced by a call to
+# `assetylene_insert_asset`, here. This way Assetylene can process multiple
+# images to be used with the custom Asset Insertion template module. The thing
+# we really want to modify is the `else` below, where JSON is parsed.
+sub assetylene_insert_asset {
+    my $app = shift;
+    my ($param) = @_;
 
-    $param->{label} = $asset->label;
-    $param->{description} = $asset->description;
-    $param->{asset_id} = $asset->id;
+    $app->validate_magic() or return;
 
-    $param->{a_tag} = $a_tag;
-    ($param->{a_href}) = $a_tag =~ /\bhref="(.+?)"/s;
-    ($param->{a_onclick}) = $a_tag =~ /\bonclick="(.+?)"/s;
-
-    $param->{form_tag} = $form_tag;
-    ($param->{form_style}) = $form_tag =~ /\bstyle="([^\"]+)"/s;
-    ($param->{form_class}) = $form_tag =~ /\bclass="([^\"]+)"/s;
-
-    $param->{img_tag} = $img_tag;
-    ($param->{img_height}) = $img_tag =~ /\bheight="(\d+)"/;
-    ($param->{img_width}) = $img_tag =~ /\bwidth="(\d+)"/;
-    ($param->{img_src}) = $img_tag =~ /\bsrc="([^\"]+)"/s;
-    ($param->{img_style}) = $img_tag =~ /\bstyle="([^\"]+)"/s;
-    ($param->{img_class}) = $img_tag =~ /\bclass="([^\"]+)"/s;
-    ($param->{img_alt}) = $img_tag =~ /\balt="([^\"]+)"/s;
-
-    $insert_tmpl->param( $param );
-
-    my $ctx = $insert_tmpl->context;
-    $ctx->stash('blog', $blog);
-    $ctx->stash('blog_id', $blog->id);
-    $ctx->stash('local_blog_id', $blog->id);
-    $ctx->stash('asset', $asset);
-
-    # Process the user-defined template:
-    my $new_html = $insert_tmpl->output;
-
-    if (defined($new_html)) {
-        # Replace the MT generated asset markup with the user-defined
-        # markup:
-        $param->{upload_html} = $new_html;
+    if (   $app->param('edit_field')
+        && $app->param('edit_field') =~ m/^customfield_.*$/ )
+    {
+        return $app->permission_denied()
+            unless $app->permissions;
     }
     else {
-        # Template build error: die, so this gets logged (we're in a
-        # callback, so it won't be surfaced to the user unfortunately)
-        die "Error from Asset Insertion module: " . $insert_tmpl->errstr;
+        return $app->permission_denied()
+            unless $app->can_do('insert_asset');
     }
+
+    require MT::Asset;
+    my $text;
+    my $assets;
+    if ( $app->param('no_insert') ) {
+        $text   = '';
+        $assets = $param->{assets};
+    }
+    elsif ( $app->param('direct_asset_insert') ) {
+        $assets = $param->{assets};
+        foreach my $a (@$assets) {
+            my %param;
+            $param{wrap_text} = 1;
+            $param{new_entry} = $app->param('new_entry') ? 1 : 0;
+
+            $a->on_upload( \%param );
+            $param{enclose}
+                = $app->param('edit_field') =~ /^customfield/ ? 1 : 0;
+            my $html = $a->as_html( \%param );
+            return $app->error( $a->error ) unless defined $html;
+
+            $text .= $html;
+        }
+    }
+    else {
+        # Parse JSON.
+        my $prefs = $app->param('prefs_json');
+        $prefs =~ s/^"|"$//g;
+        $prefs =~ s/\\//g;
+        $prefs = eval { MT::Util::from_json($prefs) };
+        if ( !$prefs ) {
+            return $app->errtrans('Invalid request.');
+        }
+
+        # Look at each asset to be inserted and save $processed_asset with the
+        # various data needed for the Asset Insertion template.
+        my $processed_assets;
+        foreach my $item (@$prefs) {
+            push @$processed_assets, _parse_asset_to_insert($item);
+        }
+
+        # Load the user-defined "Asset Insertion" template module. (Currently,
+        # this template must be named in English. Look both at the blog and
+        # system level for this template.)
+        my $blog = $app->blog;
+        my $insert_tmpl = $app->model('template')->load({
+            name => 'Asset Insertion',
+            type => 'custom',
+            blog_id => [ $blog->id, 0 ],
+        });
+
+        if ( ! $insert_tmpl ) {
+            die $app->log({
+                level    => $app->model('log')->ERROR(),
+                category => 'entry',
+                class    => 'assetylene',
+                blog_id  => $blog->id,
+                author   => $app->user->id,
+                message  => "A template module named &ldquo;Asset "
+                    . "Insertion&rdqup; could not be found in this blog or at "
+                    . "the system level. This template is required to use "
+                    . "Assetylene.",
+            });
+        }
+
+        # Set the Assets context to use in the Asset Insertion template.
+        my $ctx = $insert_tmpl->context;
+        $ctx->stash( 'assets', $processed_assets );
+
+        $insert_tmpl->param( $param );
+
+        my $ctx = $insert_tmpl->context;
+        $ctx->stash('blog', $blog);
+        $ctx->stash('blog_id', $blog->id);
+        $ctx->stash('local_blog_id', $blog->id);
+
+        # Process the user-defined template:
+        my $new_html = $insert_tmpl->output;
+
+        $text = $new_html;
+    }
+
+    my $tmpl;
+    $tmpl = $app->load_tmpl(
+        'dialog/asset_insert.tmpl',
+        {   upload_html => $text || '',
+            edit_field => scalar $app->param('edit_field') || '',
+        },
+    );
+
+    return $tmpl;
+}
+
+# Parse the individual asset to be inserted.
+# Return the asset object, and a "processed asset" object that contains
+# relevant content to be used in the Asset Insertion Template Module.
+sub _parse_asset_to_insert {
+    my ($item) = @_;
+    my ($app)  = MT->instance;
+
+    my $id = $item->{id};
+    return $app->errtrans('Asset ID not found.')
+        unless $id;
+
+    my $asset = MT::Asset->load($id)
+        or return $app->errtrans( 'Cannot load asset #[_1]', $id );
+
+    # Save the values from the asset Insert Options screen. These
+    $asset->{column_values}->{wrap_text}   = 1;
+    $asset->{column_values}->{new_entry}   = $app->param('new_entry') ? 1 : 0;
+    $asset->{column_values}->{enclose}
+        = $app->param('edit_field') =~ /^customfield/ ? 1 : 0;
+    $asset->{column_values}->{include}     = $item->{include};
+
+    $asset->{column_values}->{thumb}       = $item->{ 'thumb' };
+    $asset->{column_values}->{thumb_width} = $item->{ 'thumb_width' };
+    $asset->{column_values}->{align}       = $item->{ 'align-'.$id };
+    $asset->{column_values}->{popup}       = $item->{ 'popup-'.$id };
+    $asset->{column_values}->{caption}
+        = $item->{ 'insert_caption-'.$id } ? $item->{ 'caption-'.$id } : '';
+
+    # Prepare any thumbnail or popup assets that may be needed, and also
+    # generate the standard default HTML, in case the user wants to use it.
+    my %param;
+    foreach my $k ( keys %$item ) {
+        my $name = $k;
+        if ( $k =~ m/(.*)[-|_]$id/ig ) {
+            $name = $1;
+        }
+        $param{$name} = $item->{$k};
+    }
+    $param{wrap_text} = 1;
+    $param{new_entry} = $app->param('new_entry') ? 1 : 0;
+    $asset->on_upload( \%param );
+    $asset->{column_values}->{default_html} = $asset->as_html( \%param );
+
+    return $asset;
 }
 
 1;
+
+__END__

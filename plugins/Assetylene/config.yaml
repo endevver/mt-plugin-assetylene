@@ -1,12 +1,27 @@
 name: Assetylene
 description: Provides a new "Caption" field when inserting an asset into a post, and the ability to customize the HTML markup produced for publishing MT assets.
-version: 1.1.1
-author_name: Six Apart Ltd.
-author_link: http://www.sixapart.com/
+version: 2.0.0
+author_name: 'Dan Wolfgang, Endevver'
+author_link: http://www.endevver.com/
 plugin_link: https://github.com/endevver/mt-plugin-assetylene
 
 applications:
     cms:
         callbacks:
-            template_param.asset_options_image: $Assetylene::Assetylene::CMS::asset_options_image
-            template_param.asset_insert: $Assetylene::Assetylene::CMS::asset_insert
+            template_source.multi_asset_options: $Assetylene::Assetylene::CMS::xfrm_src_multi_asset_options
+            template_param.multi_asset_options: $Assetylene::Assetylene::CMS::xfrm_param_multi_asset_options
+        methods:
+            assetylene_insert_asset: $Assetylene::Assetylene::CMS::assetylene_insert_asset
+
+tags:
+    function:
+        AssetyleneAlign:       $Assetylene::Assetylene::Tags::align
+        AssetyleneCaption:     $Assetylene::Assetylene::Tags::caption
+        AssetyleneDefaultHTML: $Assetylene::Assetylene::Tags::default_html
+        AssetyleneEnclose:     $Assetylene::Assetylene::Tags::enclose
+        AssetyleneInclude:     $Assetylene::Assetylene::Tags::include
+        AssetyleneNewEntry:    $Assetylene::Assetylene::Tags::new_entry
+        AssetylenePopup:       $Assetylene::Assetylene::Tags::popup
+        AssetyleneThumb:       $Assetylene::Assetylene::Tags::thumb
+        AssetyleneThumbWidth:  $Assetylene::Assetylene::Tags::thumb_width
+        AssetyleneWrapText:    $Assetylene::Assetylene::Tags::wrap_text
