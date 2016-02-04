@@ -96,7 +96,22 @@ sub assetylene_insert_asset {
             unless $app->can_do('insert_asset');
     }
 
-    require MT::Asset;
+    # Load the user-defined "Asset Insertion" template module. (Currently,
+    # this template must be named in English. Look both at the blog and
+    # system level for this template.) If no template can be found, give up and use the standard asset insertion method.
+    my $blog = $app->blog;
+    my $insert_tmpl = $app->model('template')->load({
+        name    => 'Asset Insertion',
+        type    => 'custom',
+        blog_id => [ $blog->id, 0 ],
+    });
+
+    # No Asset Insertion template? Just use MT's insert capability.
+    if ( ! $insert_tmpl ) {
+        require MT::CMS::Asset;
+        return MT::CMS::Asset::insert_asset( $app, $param );
+    }
+
     my $text;
     my $assets;
     if ( $app->param('no_insert') ) {
@@ -134,30 +149,6 @@ sub assetylene_insert_asset {
         my $processed_assets;
         foreach my $item (@$prefs) {
             push @$processed_assets, _parse_asset_to_insert($item);
-        }
-
-        # Load the user-defined "Asset Insertion" template module. (Currently,
-        # this template must be named in English. Look both at the blog and
-        # system level for this template.)
-        my $blog = $app->blog;
-        my $insert_tmpl = $app->model('template')->load({
-            name => 'Asset Insertion',
-            type => 'custom',
-            blog_id => [ $blog->id, 0 ],
-        });
-
-        if ( ! $insert_tmpl ) {
-            die $app->log({
-                level    => $app->model('log')->ERROR(),
-                category => 'entry',
-                class    => 'assetylene',
-                blog_id  => $blog->id,
-                author   => $app->user->id,
-                message  => "A template module named &ldquo;Asset "
-                    . "Insertion&rdqup; could not be found in this blog or at "
-                    . "the system level. This template is required to use "
-                    . "Assetylene.",
-            });
         }
 
         # Set the Assets context to use in the Asset Insertion template.
