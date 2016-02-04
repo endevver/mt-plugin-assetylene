@@ -10,6 +10,16 @@ use MT::Util qw{ encode_html };
 sub xfrm_src_multi_asset_options {
     my ($cb, $app, $tmpl) = @_;
 
+    # Is there an Asset Insertion template ready to use? If not, there's no
+    # reason to supply the caption field or otherwise update the Asset Options
+    # screen.
+    my $blog = $app->blog;
+    return unless $app->model('template')->exist({
+        name    => 'Asset Insertion',
+        type    => 'custom',
+        blog_id => [ $blog->id, 0 ],
+    });
+
     # Add the caption fields.
     my $html = <<HTML;
     <input type="checkbox"
