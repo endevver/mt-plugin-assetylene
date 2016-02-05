@@ -146,14 +146,13 @@ sub assetylene_insert_asset {
 
         # Look at each asset to be inserted and save $processed_asset with the
         # various data needed for the Asset Insertion template.
-        my $processed_assets;
         foreach my $item (@$prefs) {
-            push @$processed_assets, _parse_asset_to_insert($item);
+            push @$assets, _parse_asset_to_insert($item);
         }
 
         # Set the Assets context to use in the Asset Insertion template.
         my $ctx = $insert_tmpl->context;
-        $ctx->stash( 'assets', $processed_assets );
+        $ctx->stash( 'assets', $assets );
 
         $insert_tmpl->param( $param );
 
@@ -176,6 +175,8 @@ sub assetylene_insert_asset {
         },
     );
 
+    my $ctx = $tmpl->context;
+    $ctx->stash( 'assets', $assets );
     return $tmpl;
 }
 
