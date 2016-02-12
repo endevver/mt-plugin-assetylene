@@ -41,12 +41,6 @@ HTML
     my $old = q{<input type="hidden" name="__mode" value="insert_asset" />};
     my $new = q{<input type="hidden" name="__mode" value="assetylene_insert_asset" />};
     $$tmpl =~ s/$old/$new/;
-
-    # When building the json object with each asset's data, we also need to
-    # parse the textarea field for the caption.
-    my $old = q{jQuery(this).find('input').};
-    my $new = q{jQuery(this).find('input,textarea').};
-    $$tmpl =~ s/$old/$new/;
 }
 
 # template_param.multi_asset_options callback, for MT 6.2+.
@@ -72,6 +66,14 @@ sub xfrm_param_multi_asset_options {
         # Increment to get the next item in the options_loop array.
         $i++;
     }
+
+    # When building the json object with each asset's data, we also need to
+    # parse the textarea field for the caption. For some reason I don't seem
+    # able to change this in template_source callback; presumably because it's
+    # part of the jq_js_include block?
+    my $text = $tmpl->text;
+    $text =~ s/(.*)find\(\'input\'\)(.*)/$1find\(\'input,textarea\'\)$2/;
+    $tmpl->text( $text );
 }
 
 # Above in xfrm_src_multi_asset_options, the default __mode `insert_asset` (on
