@@ -35,7 +35,7 @@ sub include {
     my ( $ctx, $args ) = @_;
     my $a = $ctx->stash('asset')
         or return $ctx->_no_asset_error();
-    return $a->{column_values}->{caption} || 1;
+    return $a->{column_values}->{include} || 1;
 }
 
 sub new_entry {
