@@ -1,6 +1,6 @@
 name: Assetylene
 description: Provides a new "Caption" field when inserting an asset into a post, and the ability to customize the HTML markup produced for publishing MT assets.
-version: 2.0.2
+version: 2.0.3
 author_name: 'Dan Wolfgang, Endevver'
 author_link: http://www.endevver.com/
 plugin_link: https://github.com/endevver/mt-plugin-assetylene
