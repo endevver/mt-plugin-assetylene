@@ -225,6 +225,8 @@ sub _parse_asset_to_insert {
     $asset->on_upload( \%param );
     $asset->{column_values}->{default_html} = $asset->as_html( \%param );
 
+    MT->run_callbacks('assetylene_parse_asset_to_insert', $item, $asset);
+
     return $asset;
 }
 
