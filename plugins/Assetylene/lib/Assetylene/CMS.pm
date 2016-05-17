@@ -140,7 +140,7 @@ sub assetylene_insert_asset {
         # Parse JSON.
         my $prefs = $app->param('prefs_json');
         $prefs =~ s/^"|"$//g;
-        $prefs =~ s/\\//g;
+        $prefs =~ s/\\([\\"])/$1/g;
         $prefs = eval { MT::Util::from_json($prefs) };
         if ( !$prefs ) {
             return $app->errtrans('Invalid request.');
